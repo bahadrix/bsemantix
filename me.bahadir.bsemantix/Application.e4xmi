@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_AtZbwNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ide.application" bindingContexts="_AtaC0NToEeKb2Mvea7mUsQ">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_AtZbwdToEeKb2Mvea7mUsQ" label="BSemantix" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/icon32.png" x="120" y="120" width="900" height="700">
+    <children xsi:type="basic:PartSashContainer" xmi:id="_p6PhQNXdEeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.partsashcontainer.0" selectedElement="_Atap6dToEeKb2Mvea7mUsQ" horizontal="true">
+      <children xsi:type="advanced:PerspectiveStack" xmi:id="_Atap6dToEeKb2Mvea7mUsQ" elementId="PerspectiveStack">
+        <children xsi:type="advanced:Perspective" xmi:id="_Atap6tToEeKb2Mvea7mUsQ" selectedElement="_Atap69ToEeKb2Mvea7mUsQ">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_Atap69ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.sashc">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_7WyoUN2LEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partsashcontainer.1" containerData="11700" horizontal="true">
+              <children xsi:type="basic:PartStack" xmi:id="_EPI3IN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.0" containerData="15917">
+                <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="3D Workbench"/>
+              </children>
+              <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right" containerData="4083">
+                <children xsi:type="basic:Part" xmi:id="_CnlVYN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right.path" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EntitiesListPart" label="Entities"/>
+              </children>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_xKGqgN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.1" containerData="4000">
+              <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console"/>
+            </children>
+          </children>
+        </children>
+      </children>
+    </children>
+    <mainMenu xmi:id="_Atap4tToEeKb2Mvea7mUsQ" elementId="menu:org.eclipse.ui.main.menu">
+      <children xsi:type="menu:Menu" xmi:id="_Atap49ToEeKb2Mvea7mUsQ" label="File">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_Atap5NToEeKb2Mvea7mUsQ" label="Open" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sample.gif" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_Atap5dToEeKb2Mvea7mUsQ" label="Save" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/save_edit.gif" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_Atap5tToEeKb2Mvea7mUsQ" label="Quit" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_Atap59ToEeKb2Mvea7mUsQ" label="Help">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_Atap6NToEeKb2Mvea7mUsQ" label="About" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
+      </children>
+    </mainMenu>
+    <trimBars xmi:id="_Atap7tToEeKb2Mvea7mUsQ">
+      <children xsi:type="menu:ToolBar" xmi:id="_AtbQ8NToEeKb2Mvea7mUsQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_AtbQ8dToEeKb2Mvea7mUsQ" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sample.gif" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_AtbQ8tToEeKb2Mvea7mUsQ" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/save_edit.gif" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_5XCf8NTsEeKb2Mvea7mUsQ" elementId="" label="Gostert" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sweet/asset-tan-16-ns.png" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
+      </children>
+    </trimBars>
+    <trimBars xmi:id="_meNGgNZREeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.trimbar.status" side="Bottom">
+      <children xsi:type="menu:ToolControl" xmi:id="_pTM9sNZREeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.toolcontrol.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.StatusBar"/>
+      <children xsi:type="menu:ToolBar" xmi:id="_WZqrYOFTEeKD8pVNc9Ce6g" elementId="me.bahadir.bsemantix.toolbar.0">
+        <children xsi:type="menu:ToolControl" xmi:id="_Ybwe8OFTEeKD8pVNc9Ce6g" elementId="me.bahadir.bsemantix.toolcontrol.prgbar" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ProgressControl"/>
+      </children>
+    </trimBars>
+  </children>
+  <handlers xmi:id="_AtaC1NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.quitCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.QuitHandler" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
+  <handlers xmi:id="_AtaC2NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.openCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.OpenHandler" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
+  <handlers xmi:id="_AtaC29ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.saveCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.SaveHandler" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
+  <handlers xmi:id="_Atap4NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.aboutCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.AboutHandler" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
+  <handlers xmi:id="_WYNlkNTsEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ShowHandler" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
+  <bindingTables xmi:id="_AtaC1dToEeKb2Mvea7mUsQ" bindingContext="_AtaC0NToEeKb2Mvea7mUsQ">
+    <bindings xmi:id="_AtaC1tToEeKb2Mvea7mUsQ" keySequence="M1+Q" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
+    <bindings xmi:id="_AtaC2dToEeKb2Mvea7mUsQ" keySequence="M1+O" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
+    <bindings xmi:id="_AtaC3NToEeKb2Mvea7mUsQ" keySequence="M1+S" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
+    <bindings xmi:id="_Atap4dToEeKb2Mvea7mUsQ" keySequence="M1+A" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
+  </bindingTables>
+  <rootContext xmi:id="_AtaC0NToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
+    <children xmi:id="_AtaC0dToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
+    <children xmi:id="_AtaC0tToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
+  </rootContext>
+  <commands xmi:id="_AtaC09ToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
+  <commands xmi:id="_AtaC19ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.open" commandName="openCommand"/>
+  <commands xmi:id="_AtaC2tToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>
+  <commands xmi:id="_AtaC3dToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
+  <commands xmi:id="_v4cUANTrEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.showname" commandName="showCommand"/>
+  <addons xmi:id="_AtZbwtToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_AtZbw9ToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_AtZbxNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_AtZbxdToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_AtZbxtToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_AtZbx9ToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_AtZbyNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+</application:Application>

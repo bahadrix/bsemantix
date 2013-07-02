@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="me.bahadir.bsemantix"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application">
+         <property
+               name="clearPersistedState"
+               value="true">
+         </property>
+         <property
+               name="applicationCSS"
+               value="platform:/plugin/me.bahadir.bsemantix/css/default.css">
+         </property>
+         <property
+               name="appName"
+               value="me.bahadir.bsemantix">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="000000">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,252,445,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="platform:/plugin/me.bahadir.bsemantix/me.bahadir.bsemantix.LifeCycleManager">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="id1"
+         name="potalenk"
+         point="org.eclipse.e4.workbench.model">
+      <processor
+            beforefragment="false"
+            class="me.bahadir.bsemantix.Processor">
+      </processor>
+   </extension>
+
+</plugin>
