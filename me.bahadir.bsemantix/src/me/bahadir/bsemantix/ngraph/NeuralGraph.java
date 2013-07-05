@@ -28,10 +28,7 @@ import org.jgrapht.graph.UndirectedSubgraph;
 public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 
 	protected static Logger log = Logger.getLogger(NeuralGraph.class.getSimpleName());
-	
 
-	
-	
 	private static final long serialVersionUID = 3785789143983992281L;
 	private SphereNode selectedNode;
 	private Console console;

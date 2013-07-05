@@ -41,6 +41,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import me.bahadir.bsemantix.geometry.Pyramid;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
@@ -146,46 +147,21 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 			}
 		});
 
-		// ng = new NeuralGraph() {
-		//
-		// private static final long serialVersionUID = 6887255869424217060L;
-		//
-		// @Override
-		// public void setOrbitOrigin(Tuple3d tuple) {
-		// NeuralBench.this.setOrbitOrigin(tuple);
-		// super.setOrbitOrigin(tuple);
-		// }
-		//
-		// };
-
-		// List<SphereNode> vertices = new LinkedList<>();
-		// SphereNode s0 = new SphereNode("root", new Vector3d());
-		// vertices.add(s0);
-		// ng.addVertex(s0);
-		// double r = 3;
-		// int c = 0;
-		//
-		// for(int i = 1; i < 80; i++) {
-		// SphereNode ps = vertices.get(i-1);
-		// for(int j = 0; j < 3; j++) {
-		// SphereNode s = new SphereNode("Node " + String.valueOf(c++), new
-		// Vector3d(
-		// ps.getPosition().x + r * (Math.cos(Math.random() *2)),
-		// ps.getPosition().y + r * (Math.cos(Math.random() *2)),
-		// ps.getPosition().y + r *(Math.cos(Math.random() *2))
-		// ));
-		// vertices.add(s);
-		// ng.addVertex(s);
-		// ng.addEdge(s, ps);
-		// }
-		// }
-
-		// SphereNode s0 = new SphereNode("orta", new Vector3d(0,0,0));
-		// SphereNode s1 = new SphereNode("sag", new Vector3d(-1,1,0));
-		// SphereNode s2 = new SphereNode("sag", new Vector3d(2,2,0) );
-		// ng.addVertex(s0);
-		// ng.addVertex(s1);
-		// ng.addVertex(s2);
+//		ng = new NeuralGraph() {
+//			private static final long serialVersionUID = 6887255869424217060L;
+//
+//			@Override
+//			public void setOrbitOrigin(Tuple3d tuple) {
+//				NeuralBench.this.setOrbitOrigin(tuple);
+//				super.setOrbitOrigin(tuple);
+//			}
+//		};
+//
+//		SphereNode s0 = new SphereNode("root", new Vector3d(0,0,0));
+//		SphereNode s1 = new SphereNode("sag", new Vector3d(1,1,1));
+//		ng.addVertex(s0);
+//		ng.addVertex(s1);
+//		ng.addEdge(new NeuralEdge(s0, s1));
 
 		// fafavafva
 
@@ -218,8 +194,9 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		neuralRoot.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
 
 		ng.render(neuralRoot);
+		
 
-		// neuralRoot.addChild(edge.getShape());
+
 
 		Bounds bounds = new BoundingSphere(orbitOrigin, 300);
 
@@ -318,6 +295,10 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		pickCanvas.setTolerance(4.0f);
 		canvas3D.addMouseListener(this);
 		canvas3D.addMouseMotionListener(this);
+
+	}
+
+	private void testPyramid() {
 
 	}
 
@@ -535,6 +516,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 					if (n.getUserData() instanceof BenchObject) {
 
 						BenchObject bo = (BenchObject) n.getUserData();
+						bo.onClick();
 						addSelection(bo);
 
 					}
@@ -546,12 +528,12 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 	}
 
 	public void addSelection(BenchObject bo) {
+		
 		if (!nodeSelection.contains(bo)) {
 			if (bo instanceof SphereNode) {
 				nodeSelection.add(bo);
-				bo.onClick();
 				selectionChanged();
-			}
+			} 
 		}
 
 	}

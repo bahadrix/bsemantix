@@ -8,15 +8,17 @@ import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
 import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.TransparencyAttributes;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 
-import me.bahadir.bsemantix.Console;
+import me.bahadir.bsemantix.geometry.AxisLines;
+import me.bahadir.bsemantix.geometry.Pyramid;
 import me.bahadir.bsemantix.parts.SelectionContentProvider.Pair;
-
-import org.jgrapht.graph.DefaultEdge;
 
 import com.hp.hpl.jena.rdf.model.Property;
 
@@ -42,7 +44,7 @@ public class NeuralEdge implements BenchObject{
 	private Point3d midPoint;
 	private Point3d point1;
 	private Point3d point2;
-	
+	private TransformGroup pyramid;
 	static {
 		enabledTransparency = new TransparencyAttributes(TransparencyAttributes.BLENDED,0.4f,
 				TransparencyAttributes.BLEND_SRC_ALPHA,	TransparencyAttributes.BLEND_ONE);
@@ -140,6 +142,22 @@ public class NeuralEdge implements BenchObject{
 		midPoint.add(point1, point2);
 		
 		midPoint.scale(.5);
+		
+		
+		Vector3d lineVector = new Vector3d();
+		lineVector.sub(point2, point1);
+		
+		//Reposition the pyramid
+		Transform3D trPyramid = new Transform3D();
+		pyramid.getTransform(trPyramid);
+				
+		trPyramid.set(directPyramid(lineVector));
+		
+		
+		trPyramid.setTranslation(new Vector3d(midPoint));
+		trPyramid.setScale(SphereNode.RADIUS / 1.2f);
+		
+		pyramid.setTransform(trPyramid);
 	}
 
 	public void redrawForVertex(SphereNode node) {
@@ -148,11 +166,33 @@ public class NeuralEdge implements BenchObject{
 		lineArr.setCoordinate(index, new Point3d(node.getPosition()));
 		refreshGeoData(); 
 	}
+
+	public Quat4d directPyramid(Vector3d direction) {
+		// Get the normalized axis perpendicular to the direction
+
+		Vector3d axis = new Vector3d();
+		Vector3d yAxis = new Vector3d(0, 1, 0);
+		axis.cross(yAxis, direction);
+
+		axis.normalize();
+
+		final double angleX = yAxis.angle(direction);
+		final double a = axis.x * Math.sin(angleX / 2f);
+		final double b = axis.y * Math.sin(angleX / 2f);
+		final double c = axis.z * Math.sin(angleX / 2f);
+		final double d = Math.cos(angleX / 2f);
+
+		Quat4d quat = new Quat4d(a, b, c, d);
+
+		return quat;
+
+	}
 	
 	private void drawLine() {
 		appearance = new Appearance();
-	    ColoringAttributes ca = new ColoringAttributes(new Color3f(1, 0.6f, 0),
-	        ColoringAttributes.SHADE_GOURAUD);
+	    ColoringAttributes ca = new ColoringAttributes(new Color3f(1, 0.6f, 0), ColoringAttributes.SHADE_GOURAUD);
+	    //ColoringAttributes ca = new ColoringAttributes(new Color3f(.6f, 0.6f, 0), ColoringAttributes.SHADE_GOURAUD);
+	    
 	    appearance.setColoringAttributes(ca);
 	    LineAttributes la = new LineAttributes(3f, LineAttributes.PATTERN_SOLID, true);
 	    appearance.setTransparencyAttributes(enabledTransparency);
@@ -166,11 +206,38 @@ public class NeuralEdge implements BenchObject{
 		lineArr.setCoordinate(1, new Point3d(targetVertex.getPosition()));
 		shape = new Shape3D(lineArr, appearance);
 		
-		shape.setName(NeuralEdge.class.getName());
+		//shape.setName(NeuralEdge.class.getName());
 		shape.setUserData(this);
 		shape.setCapability(Shape3D.ALLOW_PICKABLE_WRITE);
 		transformGroup.addChild(shape);
+		
+		this.pyramid = createPyramid();
+
+		transformGroup.addChild(pyramid);
+		
+		//AxisLines al = new AxisLines(transformGroup);
+		
 		refreshGeoData();
+	}
+	
+	private TransformGroup createPyramid() {
+		Pyramid geo = new Pyramid();
+		
+		TransformGroup pyGroup = new TransformGroup();
+		pyGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		pyGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		
+		//AxisLines al = new AxisLines(pyGroup);
+		
+
+		pyGroup.addChild(geo.createShape());
+		pyGroup.setUserData(this);
+		pyGroup.setName(this.name);
+		pyGroup.setPickable(true);
+		
+		
+		return pyGroup;
+
 	}
 	
 	public TransformGroup getTransformGroup() {
@@ -194,7 +261,7 @@ public class NeuralEdge implements BenchObject{
 
 
 	public void onClick() {
-		
+		System.out.println("cliecked");
 	}
 
 	NeuralGraph getNg() {

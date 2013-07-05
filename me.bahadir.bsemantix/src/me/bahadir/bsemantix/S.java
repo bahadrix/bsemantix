@@ -42,6 +42,11 @@ import org.osgi.framework.FrameworkUtil;
  *
  */
 public class S {
+	
+	public static Vector3d unitVectorX = new Vector3d(1,0,0);
+	public static Vector3d unitVectorY = new Vector3d(0,1,0);
+	public static Vector3d unitVectorZ = new Vector3d(0,0,1);
+	
 	public static Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
 	public static Color3f darkgrey = new Color3f(0.25f, 0.25f, 0.25f);
 	public static Color3f grey = new Color3f(0.5f, 0.5f, 0.5f);
