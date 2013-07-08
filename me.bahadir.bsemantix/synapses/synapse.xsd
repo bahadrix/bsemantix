@@ -1,39 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema targetNamespace="http://bahadir.me/synapse" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://bahadir.me/synapse">
+<xsd:schema targetNamespace="http://bahadir.me/synapse"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://bahadir.me/synapse">
 
-    <xsd:element name="synapse" type="Synapse"></xsd:element>
-    
-    <xsd:complexType name="Synapse">
-    	<xsd:sequence>
-    		<xsd:element name="question" type="Question" maxOccurs="1" minOccurs="1">
-    		</xsd:element>
-    	</xsd:sequence>
-    </xsd:complexType>
+	<xsd:element name="synapse" type="Synapse"></xsd:element>
 
-    <xsd:complexType name="Question">
-    	<xsd:sequence>
-    		<xsd:element name="answer" type="Answer" minOccurs="2" maxOccurs="unbounded">
-    		</xsd:element>
-    	</xsd:sequence>
-    	<xsd:attribute name="text" type="xsd:string" use="required"></xsd:attribute>
-    </xsd:complexType>
+	<xsd:complexType name="Synapse">
+		<xsd:sequence>
+			<xsd:element name="question" type="Question" maxOccurs="1"
+				minOccurs="1">
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="objectUri" type="xsd:anyURI"></xsd:attribute>
+		<xsd:attribute name="spUri" type="xsd:anyURI"></xsd:attribute>
+		<xsd:attribute name="subjectUri" type="xsd:anyURI"
+			use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					URI of synaptic resource
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
 
-    <xsd:complexType name="Answer">
-    	<xsd:choice>
-    		<xsd:element name="leaf" type="Leaf"></xsd:element>
-    		<xsd:element name="question" type="Question"></xsd:element>
-    	</xsd:choice>
-    	<xsd:attribute name="text" use="required">
-    		<xsd:simpleType>
-    			<xsd:restriction base="xsd:string">
-    				<xsd:whiteSpace value="collapse"></xsd:whiteSpace>
-    			</xsd:restriction>
-    		</xsd:simpleType>
-    	</xsd:attribute>
-    	<xsd:attribute name="fact" type="xsd:string" use="required"></xsd:attribute>
-    </xsd:complexType>
+	<xsd:complexType name="Question">
+		<xsd:sequence>
+			<xsd:element name="answer" type="Answer" minOccurs="2"
+				maxOccurs="unbounded">
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="text" type="xsd:string" use="required"></xsd:attribute>
+	</xsd:complexType>
 
-    <xsd:complexType name="Leaf">
-    	<xsd:attribute name="pass" type="xsd:boolean" use="required"></xsd:attribute>
-    </xsd:complexType>
+	<xsd:complexType name="Answer">
+		<xsd:choice>
+			<xsd:element name="leaf" type="Leaf"></xsd:element>
+			<xsd:element name="question" type="Question"></xsd:element>
+		</xsd:choice>
+		<xsd:attribute name="text" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:whiteSpace value="collapse"></xsd:whiteSpace>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="fact" type="xsd:string" use="required"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="Leaf">
+		<xsd:attribute name="result" type="xsd:int" use="required"
+			default="0">
+			<xsd:annotation>
+				<xsd:documentation></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="synapses" type="Synapses"></xsd:element>
+
+	<xsd:complexType name="Synapses">
+		<xsd:sequence>
+			<xsd:element name="synapse" type="Synapse" minOccurs="1"
+				maxOccurs="unbounded">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

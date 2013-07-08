@@ -7,6 +7,7 @@
           <children xsi:type="basic:PartSashContainer" xmi:id="_Atap69ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.sashc">
             <children xsi:type="basic:PartSashContainer" xmi:id="_7WyoUN2LEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partsashcontainer.1" containerData="11700" horizontal="true">
               <children xsi:type="basic:PartStack" xmi:id="_EPI3IN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.0" containerData="15917">
+                <children xsi:type="basic:InputPart" xmi:id="_fCP1MOe-EeKl0ueTYh8_5Q" elementId="me.bahadir.bsemantix.inputpart.editor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EditorPart" label="OWL Editor"/>
                 <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="3D Workbench"/>
               </children>
               <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right" containerData="4083">

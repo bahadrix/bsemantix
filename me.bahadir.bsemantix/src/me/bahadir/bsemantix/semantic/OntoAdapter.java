@@ -1,5 +1,6 @@
 package me.bahadir.bsemantix.semantic;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,13 +19,25 @@ import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 
+import com.hp.hpl.jena.ontology.AllValuesFromRestriction;
+import com.hp.hpl.jena.ontology.CardinalityQRestriction;
+import com.hp.hpl.jena.ontology.CardinalityRestriction;
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntProperty;
+import com.hp.hpl.jena.ontology.QualifiedRestriction;
+import com.hp.hpl.jena.ontology.Restriction;
+import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
+import com.hp.hpl.jena.ontology.UnionClass;
+import com.hp.hpl.jena.ontology.impl.CardinalityQRestrictionImpl;
+import com.hp.hpl.jena.ontology.impl.CardinalityRestrictionImpl;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.shared.InvalidPropertyURIException;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.util.iterator.Filter;
 
@@ -32,12 +45,109 @@ public class OntoAdapter {
 	protected static Logger log = Logger.getLogger(OntoAdapter.class.getSimpleName());
 	
 	private OntModel model;
+	private List<SynapticProperty> synapticProperties;
+	
 
-
-	public OntoAdapter() {
-
+	public OntoAdapter(OntModel model) {
+		loadModel(model);
+	}
+	
+	public void loadModel(OntModel model) {
 		log.info("Creating sample ontology model..");
-		this.model = SampleOM.getOntologyModel();
+		this.model = model;
+		
+		loadSynapticProperties();
+	}
+
+	private void loadSynapticProperties() {
+		log.info("Searching synaptic properties:");
+		synapticProperties = new ArrayList<SynapticProperty>();
+		Property pIsSynaptic = model.createProperty("http://bahadir.me/synapse#isSynaptic");
+		Iterator<Resource> it = model.listResourcesWithProperty(pIsSynaptic);
+		
+		while(it.hasNext()) {
+			Resource r = it.next();
+			try {
+				Property p = model.getProperty(r.getURI());
+				synapticProperties.add(new SynapticProperty(p));
+				log.info("\t" + p.getURI());
+			} catch (UnsupportedOperationException e) {
+				log.warning(r.getLocalName() + " has error: " + e.getLocalizedMessage()); 
+			} catch (InvalidPropertyURIException e ) {
+				//Skip if resource is not property
+			}
+		}
+		
+		
+		
+	}
+	
+	public void showSynapticStatements() {
+		log.info("Searching synaptic statements..");
+		
+		Iterator<OntClass> it = model.listClasses();
+		
+		while(it.hasNext()) { // butun tanimlanmis siniflari gez
+			OntClass cls = it.next();
+			Iterator<OntClass> eqit = cls.listEquivalentClasses();
+			
+			while(eqit.hasNext()) { // bu siniflarin butun equivalent tanimlamalarini gez.
+				OntClass eqCls = eqit.next();
+				if(eqCls.isRestriction()) { // bu equ.cls. bir restriction ise
+					
+					Restriction rest = eqCls.asRestriction();
+					
+					
+					
+					//Synaptic property ile mi ilgili ona bak
+					for(SynapticProperty sp :synapticProperties) {
+						if(rest.getOnProperty().equals(sp.getOwlProperty())) {
+							//bizim synaptic proplardan biri ile ilgili bir rest. içeriyor.
+							
+							log.info("\t" + cls.getLocalName() + ":" + sp.getOwlProperty().getLocalName());
+							OntClass range = null;
+							if(rest.isSomeValuesFromRestriction()) { // some values restriction
+								log.info("\t\t(some)");
+								SomeValuesFromRestriction someRest = rest.asSomeValuesFromRestriction();
+								range = someRest.getSomeValuesFrom().as(OntClass.class);
+								
+							} else if(rest.isAllValuesFromRestriction()){
+								log.info("\t\t(allFrom)");
+								AllValuesFromRestriction allRest = rest.asAllValuesFromRestriction();
+								range = allRest.getAllValuesFrom().as(OntClass.class);
+							} else {
+								Property pQualifiedCard = model.getProperty("http://www.w3.org/2002/07/owl#qualifiedCardinality");
+								Property pOnClass = model.getProperty("http://www.w3.org/2002/07/owl#onClass");
+								if(rest.hasProperty(pQualifiedCard)) {
+									
+									int cardInt = rest.getPropertyValue(pQualifiedCard).asLiteral().getInt();
+									
+									log.info(String.format("\t\t(exact %d)",cardInt));
+									range = rest.getPropertyValue(pOnClass).as(OntClass.class);
+								}
+								
+								
+							}
+							
+							if(range != null) {
+								if(range.isUnionClass()) {
+									UnionClass uc = range.asUnionClass();
+									Iterator<? extends OntClass> itop = uc.listOperands();
+									while(itop.hasNext()) {
+										OntClass op = itop.next();
+										log.info("\t\t" + op.getLocalName());
+									}
+								} else {
+									log.info("\t\t" + range.getLocalName());
+								}
+							}
+							
+						}
+					}		
+				}
+			}
+		}
+		
 	}
 
 	/**
@@ -119,10 +229,6 @@ public class OntoAdapter {
 			}
 
 		}
-		
-		
-		
-
 
 		return ng;
 	}

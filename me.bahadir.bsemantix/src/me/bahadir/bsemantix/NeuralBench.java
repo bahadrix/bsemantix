@@ -52,6 +52,7 @@ import me.bahadir.bsemantix.parts.EntitiesListPart;
 import me.bahadir.bsemantix.physics.NodeForcesMap;
 import me.bahadir.bsemantix.physics.Physics;
 import me.bahadir.bsemantix.semantic.OntoAdapter;
+import me.bahadir.bsemantix.semantic.SampleOM;
 
 import org.apache.jena.riot.Lang;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -135,7 +136,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		SimpleUniverse universe = new SimpleUniverse(canvas3D);
 		ViewingPlatform platform = universe.getViewingPlatform();
 
-		OntoAdapter ontoAdapter = new OntoAdapter();
+		OntoAdapter ontoAdapter = new OntoAdapter(SampleOM.getOntologyModel());
 		ng = ontoAdapter.createNeuralGraph("bx:");
 		ng.setCanvas3D(canvas3D);
 		ng.setOriginSetListener(new NeuralGraph.OriginSetListener() {
@@ -147,6 +148,8 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 			}
 		});
 
+		
+		
 //		ng = new NeuralGraph() {
 //			private static final long serialVersionUID = 6887255869424217060L;
 //
