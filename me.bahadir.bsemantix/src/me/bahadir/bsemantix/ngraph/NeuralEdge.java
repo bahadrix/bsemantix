@@ -50,6 +50,8 @@ public class NeuralEdge implements BenchObject{
 	protected Color3f lineColor = new Color3f(1, 0.6f, 0);
 	protected Color3f pyramidColor = new Color3f(1f, .75f, .0f);
 	
+	private Pyramid pyramidCore, pyramidShell;
+	
 	static {
 		enabledTransparency = new TransparencyAttributes(TransparencyAttributes.BLENDED,0.4f,
 				TransparencyAttributes.BLEND_SRC_ALPHA,	TransparencyAttributes.BLEND_ONE);
@@ -233,16 +235,31 @@ public class NeuralEdge implements BenchObject{
 	}
 	
 	private TransformGroup createPyramid() {
-		Pyramid geo = new Pyramid(pyramidColor);
+		pyramidCore = new Pyramid(pyramidColor);
+		
+		pyramidShell = new Pyramid(pyramidColor);
+		
+		
+		TransformGroup shellGroup = new TransformGroup();
+		shellGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		shellGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		shellGroup.addChild(pyramidShell.createShape());
+		
+		Transform3D trShell = new Transform3D();
+		shellGroup.getTransform(trShell);
+		trShell.setScale(1.2f);
+		trShell.setTranslation(new Vector3d(0f,-0.3,0f));
+		shellGroup.setTransform(trShell);
 		
 		TransformGroup pyGroup = new TransformGroup();
 		pyGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		pyGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		
 		//AxisLines al = new AxisLines(pyGroup);
+		pyGroup.addChild(shellGroup);
 		
 
-		pyGroup.addChild(geo.createShape());
+		pyGroup.addChild(pyramidCore.createShape());
 		pyGroup.setUserData(this);
 		pyGroup.setName(this.name);
 		pyGroup.setPickable(true);
@@ -301,16 +318,26 @@ public class NeuralEdge implements BenchObject{
 	}
 
 
+	private void shellVisible(boolean visible) {
+		if(visible) {
+			pyramidShell.setTransparency(.4f);
+		} else {
+			pyramidShell.setTransparency(1f);
+		}
+	}
+	
+	
+	
 	public void onHover() {
-		// TODO Auto-generated method stub
-		
+
+		shellVisible(true);
 	}
 
 
 	@Override
 	public void onHoverExit() {
-		// TODO Auto-generated method stub
-		
+
+		shellVisible(false);
 	}
 
 

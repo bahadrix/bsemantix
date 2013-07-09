@@ -4,6 +4,7 @@ package me.bahadir.bsemantix.parts;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
+import me.bahadir.bsemantix.ngraph.SynapticEdge;
 
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -36,8 +37,10 @@ public class PathLabelProvider extends StyledCellLabelProvider{
 			//cell.setImage(S.getSharedImage(ISharedImages.IMG_OBJ_FOLDER));
 			cell.setImage(SPHERE_ICON);
 			text.append(s.getName());
-			
-			
+		} else if(element instanceof SynapticEdge){
+			SynapticEdge se = (SynapticEdge) element;
+			cell.setImage(SYNAPSE_ICON);	
+			text.append(se.getName());
 			//return s.getName();
 		} else if(element instanceof NeuralEdge){
 			cell.setImage(EDGE_ICON);
@@ -57,9 +60,7 @@ public class PathLabelProvider extends StyledCellLabelProvider{
 					public void applyStyles(TextStyle textStyle) {
 						
 						textStyle.foreground = new Color(Display.getCurrent(), 74,129,74);
-						
-						//
-						
+
 					}
 				});
 				

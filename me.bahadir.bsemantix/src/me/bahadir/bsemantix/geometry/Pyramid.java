@@ -9,6 +9,7 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
 import javax.media.j3d.TextureAttributes;
+import javax.media.j3d.TransparencyAttributes;
 import javax.media.j3d.TriangleArray;
 import javax.vecmath.Color3f;
 import javax.vecmath.Color4f;
@@ -27,6 +28,7 @@ public class Pyramid {
 	private Shape3D shape;
 	private GeometryArray geometry;
 	private Color3f color;
+	private Appearance appearance;
 	
 	public Pyramid() {
 		this(new Color3f(1f, .75f, .0f));
@@ -67,8 +69,19 @@ public class Pyramid {
 
 	}
 
+	public void setTransparency(float transparency) {
+		appearance.setTransparencyAttributes(
+				new TransparencyAttributes(
+						TransparencyAttributes.BLENDED,
+						transparency,
+						TransparencyAttributes.BLEND_SRC_ALPHA,	
+						TransparencyAttributes.BLEND_ONE));
+	}
+	
 	public Shape3D createShape() {
-		Appearance appearance = new Appearance();
+		appearance = new Appearance();
+		appearance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_READ);
+		appearance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_WRITE);
 		//Color3f color = new Color3f(.04f, .39f, .64f);
 
 
