@@ -3,37 +3,55 @@ package me.bahadir.bsemantix.parts;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.io.StringReader;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import me.bahadir.bsemantix.Activator;
 import me.bahadir.bsemantix.NeuralBench;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.physics.Physics;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.di.AboutToShow;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MContext;
+import org.eclipse.e4.ui.model.application.ui.MInput;
+import org.eclipse.e4.ui.model.application.ui.basic.MInputPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class BenchPart extends PartBase { 
 	protected static Logger log = Logger.getLogger(BenchPart.class.getSimpleName());
 	
+	
+	private String ontoText = "";
 	private Dimension screenSize;
 	private NeuralBench nb;
 	
 	public static MApplication application;
+
 	
 	@Inject
 	public BenchPart() {
@@ -134,7 +152,7 @@ public class BenchPart extends PartBase {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				nb.disperse(Physics.FORCE_LONGING | Physics.FORCE_REPULSIVE, 8);
+				nb.disperse(Physics.FORCE_LONGING | Physics.FORCE_REPULSIVE | Physics.FORCE_WITH_EDGE, 8);
 			}
 			
 			@Override
@@ -153,14 +171,45 @@ public class BenchPart extends PartBase {
 
 		//broker = context.get(IEventBroker.class);
 		//Console.println("Composite created");
+		
+		
+		
 	}
 	
+	@AboutToShow
+	public void onShow() {
+		
+	}
 	
 	@Focus
-	public void onFocus() {
-		//TODO Your code here
+	public void onFocus(EPartService service) {
+
+		// burasý 3-4 kere çaðýrýlýyo mok varmýþ gibi
+		
+		
+		MPart p = service.findPart("me.bahadir.bsemantix.inputpart.editor");
+
+		StyledText text = (StyledText) p.getContext().get("txtOntology");
+		String code = text.getText();
+		
+		
+		if(!code.equals(ontoText)) {
+			ontoText = code;
+			log.info("Loading code..");
+			
+			StringReader sr = new StringReader(code);
+			OntModel model = ModelFactory.createOntologyModel();
+			model.read(sr, null);
+			
+			nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
+			
+		}
+			
+		
+		
+		
 	}
 
-
+	
 	
 }

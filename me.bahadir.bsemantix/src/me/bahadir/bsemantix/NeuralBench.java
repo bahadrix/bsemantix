@@ -6,12 +6,15 @@ import java.awt.Frame;
 import java.awt.GraphicsConfigTemplate;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +73,7 @@ import org.jgrapht.graph.UndirectedSubgraph;
 import org.osgi.framework.BundleContext;
 
 import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.ontology.OntModel;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
@@ -115,6 +119,8 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 
 	private BranchGroup grids;
 
+	private Canvas3D canvas3D;
+	
 	public NeuralBench(Frame frame) {
 		this.console = new Console(NeuralBench.class);
 		this.frame = frame;
@@ -131,22 +137,14 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 	}
 
 	public void init() {
+		
 
-		Canvas3D canvas3D = createCanvas3D();
+		
+		canvas3D = createCanvas3D();
 		SimpleUniverse universe = new SimpleUniverse(canvas3D);
 		ViewingPlatform platform = universe.getViewingPlatform();
 
-		OntoAdapter ontoAdapter = new OntoAdapter(SampleOM.getOntologyModel());
-		ng = ontoAdapter.createNeuralGraph("bx:");
-		ng.setCanvas3D(canvas3D);
-		ng.setOriginSetListener(new NeuralGraph.OriginSetListener() {
 
-			@Override
-			public void onSetOrbitOrigin(Tuple3d origin) {
-				NeuralBench.this.setOrbitOrigin(origin);
-
-			}
-		});
 
 		
 		
@@ -168,16 +166,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 
 		// fafavafva
 
-		SubGraphSet sgSet = ng.getSubGraphs();
-		for (UndirectedSubgraph<SphereNode, NeuralEdge> sg : sgSet.values()) {
 
-			String s = "";
-
-			for (SphereNode sp : sg.vertexSet()) {
-				s += sp.getName() + "\r\n";
-			}
-
-		}
 
 		// avafvafvafv
 
@@ -195,11 +184,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		neuralRoot.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
 		neuralRoot.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
 		neuralRoot.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-
-		ng.render(neuralRoot);
 		
-
-
 
 		Bounds bounds = new BoundingSphere(orbitOrigin, 300);
 
@@ -301,10 +286,53 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 
 	}
 
-	private void testPyramid() {
+	public void loadOntology(OntModel model, String nsPrefix) {
+		clearArea();
+		
+		OntoAdapter ontoAdapter = new OntoAdapter(model);
+		
+		ng = ontoAdapter.createNeuralGraph(nsPrefix);
+		ng.setCanvas3D(canvas3D);
+		ng.setOriginSetListener(new NeuralGraph.OriginSetListener() {
 
+			@Override
+			public void onSetOrbitOrigin(Tuple3d origin) {
+				NeuralBench.this.setOrbitOrigin(origin);
+
+			}
+		});
+		SubGraphSet sgSet = ng.getSubGraphs();
+		for (UndirectedSubgraph<SphereNode, NeuralEdge> sg : sgSet.values()) {
+
+			String s = "";
+
+			for (SphereNode sp : sg.vertexSet()) {
+				s += sp.getName() + "\r\n";
+			}
+
+		}
+		ng.render(neuralRoot);
 	}
 
+	public void clearArea() {
+		
+		List<Node> trash = new LinkedList<>();
+		
+		//Add to recycle bin
+		for(int i = 0; i < neuralRoot.numChildren(); i++) {
+			Node node = neuralRoot.getChild(i);
+			if(node instanceof BranchGroup) {
+				trash.add(node);
+			}
+		}
+	
+		//empty recycle bin
+		for(Node node : trash) {
+			neuralRoot.removeChild(node);
+		}
+		System.gc();
+	}
+	
 	public Canvas3D createCanvas3D() {
 		GraphicsConfigTemplate3D gc3D = new GraphicsConfigTemplate3D();
 		gc3D.setSceneAntialiasing(GraphicsConfigTemplate.PREFERRED);

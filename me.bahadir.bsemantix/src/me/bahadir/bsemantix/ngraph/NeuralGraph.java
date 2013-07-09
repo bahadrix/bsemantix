@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Tuple3d;
@@ -24,6 +25,8 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.UndirectedSubgraph;
+
+import com.hp.hpl.jena.ontology.OntClass;
 
 public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 
@@ -58,8 +61,7 @@ public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 		
 		while(it.hasNext()) {
 			i++;
-			
-			
+
 			SphereNode s = it.next();
 			if(addedSet.contains(s)) continue;
 			
@@ -91,6 +93,20 @@ public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 		
 		
 		return subset;
+	}
+	
+	public SphereNode getNodeByUri(String uri) {
+		
+			for(SphereNode temp : vertexSet()) {
+				OntClass cls = temp.getOntClass();
+				if(cls != null) {
+					if(cls.hasURI(uri)) {
+						return temp;
+					}
+				}
+			}
+		
+		return null;
 	}
 	
 	public void setOriginSetListener(OriginSetListener originSetListener) {
@@ -197,14 +213,19 @@ public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 	}
 
 	public void render(TransformGroup tg) {
-		
+		BranchGroup nodeBranch = new BranchGroup();
+		nodeBranch.setCapability(BranchGroup.ALLOW_DETACH);
 		for(SphereNode sn : this.vertexSet()) {
-			tg.addChild(sn.getTransformGroup());
+			nodeBranch.addChild(sn.getTransformGroup());
 		}
 		
+		BranchGroup edgeBranch = new BranchGroup();
+		edgeBranch.setCapability(BranchGroup.ALLOW_DETACH);
 		for(NeuralEdge ne : this.edgeSet()) {
-			tg.addChild(ne.getTransformGroup());
+			edgeBranch.addChild(ne.getTransformGroup());
 		}
+		tg.addChild(nodeBranch);
+		tg.addChild(edgeBranch);
 	}
 	
 	public NodeForcesMap getForces(int forces) {

@@ -16,12 +16,23 @@ public class SelectionContentProvider implements ITreeContentProvider {
 	private EntitySet[] entitySets;
 
 	public static class Pair {
+		public final boolean isPairArray; 
 		public final String name;
 		public final String value;
-
+		public final Pair[] pairArray;
+		
+		public Pair(String name, Pair[] pairs) {
+			this.isPairArray = true;
+			this.name = name;
+			this.value = null;
+			this.pairArray = pairs;
+		}
+		
 		public Pair(String name, String value) {
+			this.isPairArray = false;
 			this.name = name;
 			this.value = value;
+			this.pairArray = null;
 		}
 	}
 
@@ -61,8 +72,11 @@ public class SelectionContentProvider implements ITreeContentProvider {
 			EntitySet entitySet = (EntitySet) parentElement;
 			return entitySet.selection.toArray();
 		} else if (parentElement instanceof BenchObject) {
-				BenchObject bo = (BenchObject) parentElement;
-				return bo.getSpecPairs().toArray();
+			BenchObject bo = (BenchObject) parentElement;
+			return bo.getSpecPairs().toArray();
+		} else if (parentElement instanceof Pair) {
+			Pair pair = (Pair) parentElement;
+			if(pair.isPairArray) return pair.pairArray;
 		}
 		
 		return null;
@@ -78,7 +92,12 @@ public class SelectionContentProvider implements ITreeContentProvider {
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof SphereNode) return true;
+		if (element instanceof NeuralEdge) return true;
 		if (element instanceof EntitiesListPart.EntitySet) return true;
+		if (element instanceof Pair) {
+			Pair p = (Pair) element;
+			return p.isPairArray;
+		}
 		return false;
 	}
 

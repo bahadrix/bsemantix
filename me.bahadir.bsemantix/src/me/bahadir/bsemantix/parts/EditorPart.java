@@ -12,8 +12,13 @@ import me.bahadir.bsemantix.semantic.OntoAdapter;
 
 import org.apache.jena.atlas.logging.Log;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.model.application.ui.MContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MInputPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
@@ -40,6 +45,8 @@ public class EditorPart {
 	private StyledText txtEditor;
 	
 	@Inject
+	  private MInputPart thisPart;
+	@Inject
 	public EditorPart() {
 		
 	}
@@ -48,6 +55,8 @@ public class EditorPart {
 	public void createComposite(Composite parent) {
 		parent.setLayout(new GridLayout());
 		ToolBar bar = new ToolBar(parent, SWT.FLAT);
+		
+		System.out.println(thisPart);
 		
 		final ToolItem tbShortPath = new ToolItem(bar, SWT.PUSH);
 		tbShortPath.setText("Parse");
@@ -76,6 +85,8 @@ public class EditorPart {
 		//txtEditor.setEditable(false);
 		txtEditor.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
+		thisPart.getContext().set("txtOntology", txtEditor);
+		
 		
 		
 	}
@@ -88,7 +99,7 @@ public class EditorPart {
 		model.read(sr, "http://bahadir.me/organiclegislation/");
 		
 		OntoAdapter adapter = new OntoAdapter(model);
-		adapter.showSynapticStatements();
+		adapter.resolveSynapses();
 		
 	}
 	

@@ -26,9 +26,14 @@ public class Pyramid {
 
 	private Shape3D shape;
 	private GeometryArray geometry;
+	private Color3f color;
 	
 	public Pyramid() {
-		
+		this(new Color3f(1f, .75f, .0f));
+	}
+	
+	public Pyramid(Color3f color) {
+		this.color = color;
 		Point3d[] points = {
 			new Point3d(-1,0,1),
 			new Point3d(1,0,1),
@@ -65,7 +70,7 @@ public class Pyramid {
 	public Shape3D createShape() {
 		Appearance appearance = new Appearance();
 		//Color3f color = new Color3f(.04f, .39f, .64f);
-		Color3f color = new Color3f(1f, .75f, .0f);
+
 
 		Texture texture = new Texture2D();
 		TextureAttributes texAttr = new TextureAttributes();

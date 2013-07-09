@@ -1,5 +1,6 @@
 package me.bahadir.bsemantix.ngraph;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.media.j3d.Appearance;
@@ -30,7 +31,7 @@ public class NeuralEdge implements BenchObject{
 	
 	private SphereNode sourceVertex, targetVertex;
 	private BranchGroup bLine;
-	public NeuralEdge() {};
+
 	private NeuralGraph ng;
 	private Shape3D shape;
 	
@@ -45,6 +46,10 @@ public class NeuralEdge implements BenchObject{
 	private Point3d point1;
 	private Point3d point2;
 	private TransformGroup pyramid;
+	
+	protected Color3f lineColor = new Color3f(1, 0.6f, 0);
+	protected Color3f pyramidColor = new Color3f(1f, .75f, .0f);
+	
 	static {
 		enabledTransparency = new TransparencyAttributes(TransparencyAttributes.BLENDED,0.4f,
 				TransparencyAttributes.BLEND_SRC_ALPHA,	TransparencyAttributes.BLEND_ONE);
@@ -55,6 +60,11 @@ public class NeuralEdge implements BenchObject{
 	public NeuralEdge(SphereNode sourceVertex, SphereNode targetVertex) {
 		this.sourceVertex = sourceVertex;
 		this.targetVertex = targetVertex;
+		
+		if(sourceVertex == null) throw new IllegalArgumentException("Source vertex of an edge can't be null");
+		if(targetVertex == null) throw new IllegalArgumentException("Target vertex of an edge can't be null");
+		
+		
 		this.transformGroup = new TransformGroup();
 		transformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
 		transformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
@@ -65,6 +75,8 @@ public class NeuralEdge implements BenchObject{
 		this.bLine = new BranchGroup();
 		bLine.setCapability(BranchGroup.ALLOW_DETACH);
 		drawLine();
+		
+		
 	}
 
 	
@@ -188,9 +200,9 @@ public class NeuralEdge implements BenchObject{
 
 	}
 	
-	private void drawLine() {
+	protected void drawLine() {
 		appearance = new Appearance();
-	    ColoringAttributes ca = new ColoringAttributes(new Color3f(1, 0.6f, 0), ColoringAttributes.SHADE_GOURAUD);
+	    ColoringAttributes ca = new ColoringAttributes(lineColor, ColoringAttributes.SHADE_GOURAUD);
 	    //ColoringAttributes ca = new ColoringAttributes(new Color3f(.6f, 0.6f, 0), ColoringAttributes.SHADE_GOURAUD);
 	    
 	    appearance.setColoringAttributes(ca);
@@ -221,7 +233,7 @@ public class NeuralEdge implements BenchObject{
 	}
 	
 	private TransformGroup createPyramid() {
-		Pyramid geo = new Pyramid();
+		Pyramid geo = new Pyramid(pyramidColor);
 		
 		TransformGroup pyGroup = new TransformGroup();
 		pyGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
@@ -345,7 +357,7 @@ public class NeuralEdge implements BenchObject{
 	@Override
 	public List<Pair> getSpecPairs() {
 		// TODO Auto-generated method stub
-		return null;
+		return new LinkedList<>();
 	}
 
 
