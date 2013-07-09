@@ -1,0 +1,12 @@
+attributions:
+
+1. 	icon: net_wrs.png 
+	http://www.iconfinder.com/icondetails/103653/16/network_wireless_icon
+	Designer: PICOL - http://www.picol.org
+	
+2. 	icon: folder_page_white.png
+	http://www.iconfinder.com/icondetails/36079/16/folder_page_white_icon
+	Designer: FatCow Web Hosting - http://www.fatcow.com/
+	
+	
+	
