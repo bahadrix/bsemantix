@@ -19,6 +19,7 @@ public class ConsolePart {
 	@Inject @Optional
 	void out(@UIEventTopic(TOPIC_CONSOLE_INFO) String s) {
 		consoleText.append(s);
+		
 		consoleText.selectAll();
 		consoleText.setSelection(consoleText.getCharCount());
 	}

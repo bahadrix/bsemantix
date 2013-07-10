@@ -32,8 +32,10 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.jgrapht.GraphPath;
@@ -67,6 +69,10 @@ public class S {
                 styleData[i] = new FontData(base.getName(), base.getHeight(), base.getStyle() | additionalStyle);
         }
         return styleData;
+	}
+	
+	public static Color SWTColor(int r, int g, int b) {
+		return new Color(Display.getCurrent(), r,g,b);
 	}
 	
 	public static Image getSharedImage(String symbolicName) {
