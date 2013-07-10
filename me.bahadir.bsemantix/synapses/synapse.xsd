@@ -8,29 +8,42 @@
 
 	<xsd:complexType name="Synapse">
 		<xsd:sequence>
-			<xsd:element name="question" type="Question" maxOccurs="1"
+            <xsd:element name="question" type="Question" maxOccurs="1"
 				minOccurs="1">
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="objectUri" type="xsd:anyURI"></xsd:attribute>
-		<xsd:attribute name="spUri" type="xsd:anyURI"></xsd:attribute>
-		<xsd:attribute name="subjectUri" type="xsd:anyURI"
+		<xsd:attribute name="objectUri" type="xsd:QName">
+			<xsd:annotation>
+				<xsd:documentation>Source Node URI</xsd:documentation>
+			</xsd:annotation></xsd:attribute>
+		<xsd:attribute name="spUri" type="xsd:QName">
+			<xsd:annotation>
+				<xsd:documentation>Synaptic Property URI
+</xsd:documentation>
+			</xsd:annotation></xsd:attribute>
+		<xsd:attribute name="subjectUri" type="xsd:QName"
 			use="required">
 			<xsd:annotation>
-				<xsd:documentation>
-					URI of synaptic resource
-				</xsd:documentation>
+				<xsd:documentation>Target Node URI</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="Question">
-		<xsd:sequence>
+        <xsd:annotation>
+        	<xsd:documentation>Question to get new question or out from decision tree by leaf node.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
 			<xsd:element name="answer" type="Answer" minOccurs="2"
 				maxOccurs="unbounded">
+                <xsd:annotation>
+                	<xsd:documentation>Every question has minimum two answers.</xsd:documentation>
+                </xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="text" type="xsd:string" use="required"></xsd:attribute>
+		<xsd:attribute name="text" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Question text that probably ends with a question mark</xsd:documentation></xsd:annotation></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="Answer">
@@ -38,23 +51,27 @@
 			<xsd:element name="leaf" type="Leaf"></xsd:element>
 			<xsd:element name="question" type="Question"></xsd:element>
 		</xsd:choice>
-		<xsd:attribute name="text" use="required">
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:whiteSpace value="collapse"></xsd:whiteSpace>
-				</xsd:restriction>
-			</xsd:simpleType>
-		</xsd:attribute>
-		<xsd:attribute name="fact" type="xsd:string" use="required"></xsd:attribute>
+
+        <xsd:attribute name="text" type="xsd:string">
+        	<xsd:annotation>
+        		<xsd:documentation>Answer of question.</xsd:documentation>
+        	</xsd:annotation></xsd:attribute>
+        <xsd:attribute name="fact" type="xsd:string" use="required">
+        	<xsd:annotation>
+        		<xsd:documentation>Fact text is a statement format of this question and answer pair.</xsd:documentation>
+        	</xsd:annotation></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="Leaf">
-		<xsd:attribute name="result" type="xsd:int" use="required"
-			default="0">
-			<xsd:annotation>
-				<xsd:documentation></xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
+
+
+        <xsd:annotation>
+        	<xsd:documentation>Port of result</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="outputNode" type="xsd:QName">
+        	<xsd:annotation>
+        		<xsd:documentation>Node uri of target node this source.</xsd:documentation>
+        	</xsd:annotation></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:element name="synapses" type="Synapses"></xsd:element>
@@ -66,4 +83,11 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
+
+
+
+
+
+
+
 </xsd:schema>

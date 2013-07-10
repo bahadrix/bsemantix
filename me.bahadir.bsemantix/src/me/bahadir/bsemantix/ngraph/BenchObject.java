@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.media.j3d.TransformGroup;
 
-import me.bahadir.bsemantix.parts.SelectionContentProvider.Pair;
+import me.bahadir.bsemantix.parts.TreePair;
+
+
 
 public interface BenchObject {
 
@@ -17,5 +19,5 @@ public interface BenchObject {
 	public void setTransparency(float alpha);
 	public void disable();
 	public void enable();
-	public List<Pair> getSpecPairs();
+	public List<TreePair> getSpecPairs();
 }

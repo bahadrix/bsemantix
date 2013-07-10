@@ -45,8 +45,8 @@ public class PathLabelProvider extends StyledCellLabelProvider{
 		} else if(element instanceof NeuralEdge){
 			cell.setImage(EDGE_ICON);
 			text.append(((NeuralEdge) element).getName());
-		} else if(element instanceof SelectionContentProvider.Pair){
-			SelectionContentProvider.Pair p = (SelectionContentProvider.Pair) element;
+		} else if(element instanceof TreePair){
+			TreePair p = (TreePair) element;
 			if(p.isPairArray) {
 				cell.setImage(PROPERTY_FOLDER_ICON);
 				text.append(p.name);

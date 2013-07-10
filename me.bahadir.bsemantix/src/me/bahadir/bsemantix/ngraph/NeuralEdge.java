@@ -19,7 +19,9 @@ import javax.vecmath.Vector3d;
 
 import me.bahadir.bsemantix.geometry.AxisLines;
 import me.bahadir.bsemantix.geometry.Pyramid;
-import me.bahadir.bsemantix.parts.SelectionContentProvider.Pair;
+
+
+import me.bahadir.bsemantix.parts.TreePair;
 
 import com.hp.hpl.jena.rdf.model.Property;
 
@@ -382,7 +384,7 @@ public class NeuralEdge implements BenchObject{
 
 
 	@Override
-	public List<Pair> getSpecPairs() {
+	public List<TreePair> getSpecPairs() {
 		// TODO Auto-generated method stub
 		return new LinkedList<>();
 	}

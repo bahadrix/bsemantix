@@ -50,5 +50,13 @@
             class="me.bahadir.bsemantix.Processor">
       </processor>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            default="false"
+            id="me.bahadir.bsemantix."
+            name="name">
+      </editor>
+   </extension>
 
 </plugin>

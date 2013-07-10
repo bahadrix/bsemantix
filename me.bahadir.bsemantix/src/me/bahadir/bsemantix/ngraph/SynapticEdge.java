@@ -2,13 +2,18 @@ package me.bahadir.bsemantix.ngraph;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.vecmath.Color3f;
 
-import me.bahadir.bsemantix.parts.SelectionContentProvider.Pair;
+import org.apache.jena.atlas.logging.Log;
+
+import me.bahadir.bsemantix.parts.TreePair;
+
+
 
 public class SynapticEdge extends NeuralEdge {
-
+	protected static Logger log = Logger.getLogger(SynapticEdge.class.getSimpleName());
 	private Synapse synapse;
 	
 	public SynapticEdge(NeuralGraph ng, Synapse synapse) {
@@ -31,10 +36,10 @@ public class SynapticEdge extends NeuralEdge {
 	
 	
 	@Override
-	public List<Pair> getSpecPairs() {
-		List<Pair> pairs = new LinkedList<>();
+	public List<TreePair> getSpecPairs() {
+		List<TreePair> pairs = new LinkedList<>();
 		
-		pairs.add(new Pair("Property URI", synapse.getProperty().getOwlProperty().getURI()));
+		pairs.add(new TreePair("Property URI", synapse.getProperty().getOwlProperty().getURI()));
 		
 		//Cardinality Label
 		
@@ -49,12 +54,23 @@ public class SynapticEdge extends NeuralEdge {
 			cardinalityLabel += String.format(" (%s..%s)", minCardLabel, maxCardLabel);
 		}
 		
-		pairs.add(new Pair(cardinalityLabel, new Pair[] {
-				new Pair("Min",minCardLabel),
-				new Pair("Max",maxCardLabel),
-				new Pair("Exact",exactCardLabel)
+		pairs.add(new TreePair(cardinalityLabel, new TreePair[] {
+				new TreePair("Min",minCardLabel),
+				new TreePair("Max",maxCardLabel),
+				new TreePair("Exact",exactCardLabel)
 				
 		}));
+		
+		pairs.add(new TreePair("Decision Model","<none>"){
+
+			@Override
+			public void onDoubleClicked() {
+				log.info("lets rock some decision");
+				super.onDoubleClicked();
+			}
+			
+		});
+		
 		pairs.addAll(super.getSpecPairs());
 		return pairs;
 	}

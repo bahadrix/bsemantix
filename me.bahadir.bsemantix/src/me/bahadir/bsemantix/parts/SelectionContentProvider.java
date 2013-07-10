@@ -11,30 +11,12 @@ import me.bahadir.bsemantix.parts.EntitiesListPart.EntitySet;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+
 public class SelectionContentProvider implements ITreeContentProvider {
 
 	private EntitySet[] entitySets;
 
-	public static class Pair {
-		public final boolean isPairArray; 
-		public final String name;
-		public final String value;
-		public final Pair[] pairArray;
-		
-		public Pair(String name, Pair[] pairs) {
-			this.isPairArray = true;
-			this.name = name;
-			this.value = null;
-			this.pairArray = pairs;
-		}
-		
-		public Pair(String name, String value) {
-			this.isPairArray = false;
-			this.name = name;
-			this.value = value;
-			this.pairArray = null;
-		}
-	}
+
 
 	public static class PseudoRootEntity {
 		public final String name;
@@ -74,8 +56,8 @@ public class SelectionContentProvider implements ITreeContentProvider {
 		} else if (parentElement instanceof BenchObject) {
 			BenchObject bo = (BenchObject) parentElement;
 			return bo.getSpecPairs().toArray();
-		} else if (parentElement instanceof Pair) {
-			Pair pair = (Pair) parentElement;
+		} else if (parentElement instanceof TreePair) {
+			TreePair pair = (TreePair) parentElement;
 			if(pair.isPairArray) return pair.pairArray;
 		}
 		
@@ -94,8 +76,8 @@ public class SelectionContentProvider implements ITreeContentProvider {
 		if (element instanceof SphereNode) return true;
 		if (element instanceof NeuralEdge) return true;
 		if (element instanceof EntitiesListPart.EntitySet) return true;
-		if (element instanceof Pair) {
-			Pair p = (Pair) element;
+		if (element instanceof TreePair) {
+			TreePair p = (TreePair) element;
 			return p.isPairArray;
 		}
 		return false;

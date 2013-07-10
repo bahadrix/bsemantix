@@ -3,6 +3,7 @@ package me.bahadir.bsemantix.parts;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.annotation.PostConstruct;
@@ -12,19 +13,25 @@ import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
+import me.bahadir.bsemantix.ngraph.SynapticEdge;
 
+import org.apache.jena.atlas.logging.Log;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.jgrapht.GraphPath;
 
 public class EntitiesListPart {
-	
+	protected static Logger log = Logger.getLogger(EntitiesListPart.class.getSimpleName());
 	public static final String TOPIC_SET_GRAPH = "PATHS_PART/SET_PATH";
 	public static final String TOPIC_SET_SELECTION = "PATHS_PART/SET_SELECTION";
+	public static final String TOPIC_OPEN_SYNAPTIC_EDGE = "PATHS_PART/OPEN_SYNAPTIC_EDGE";
 	
 	private TreeViewer treeViewer;
 
@@ -55,6 +62,22 @@ public class EntitiesListPart {
 		treeViewer.setContentProvider(new SelectionContentProvider());
 		treeViewer.setLabelProvider(new PathLabelProvider());
 		treeViewer.setAutoExpandLevel(2);
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel =  (IStructuredSelection) event.getSelection();
+				Object item = sel.getFirstElement();
+				if(item instanceof TreePair) {
+					TreePair pair = (TreePair) item;
+					pair.onDoubleClicked();
+				}
+			}
+		});
+	}
+	
+	private void synapticEdgeOpened(SynapticEdge se) {
+		log.info(se.getName() +" doubled");
 	}
 	
 	@Inject @Optional

@@ -33,7 +33,7 @@ import me.bahadir.bsemantix.Appearances;
 import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.SphereMaterials.SphereMaterial;
-import me.bahadir.bsemantix.parts.SelectionContentProvider.Pair;
+import me.bahadir.bsemantix.parts.TreePair;
 import me.bahadir.bsemantix.physics.Physics;
 
 import com.hp.hpl.jena.ontology.OntClass;
@@ -392,14 +392,14 @@ public class SphereNode implements BenchObject {
 	}
 
 	@Override
-	public List<Pair> getSpecPairs() {
-		List<Pair> pairs = new LinkedList<>();
+	public List<TreePair> getSpecPairs() {
+		List<TreePair> pairs = new LinkedList<>();
 
-		pairs.add(new Pair("Name", getName()));
-		pairs.add(new Pair("Position", S.Vector3dString(getPosition())));
-		pairs.add(new Pair("Repulsive FV", S.Vector3dString(getRepulisiveForce())));
+		pairs.add(new TreePair("Name", getName()));
+		pairs.add(new TreePair("Position", S.Vector3dString(getPosition())));
+		pairs.add(new TreePair("Repulsive FV", S.Vector3dString(getRepulisiveForce())));
 		if(ontClass != null) {
-			pairs.add(new Pair("URI", ontClass.getURI()));
+			pairs.add(new TreePair("URI", ontClass.getURI()));
 		};
 		return pairs;
 	}

@@ -132,6 +132,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		rotPerPx = (Math.PI / screenSize.height) * 4;
 		nodeSelection = new ArrayList<>();
+		
 		init();
 
 	}
@@ -563,8 +564,11 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		if (!nodeSelection.contains(bo)) {
 			if (bo instanceof SphereNode) {
 				nodeSelection.add(bo);
-				selectionChanged();
-			} 
+			} else if (bo instanceof NeuralEdge) {
+				clearSelection();
+				nodeSelection.add(bo);		
+			}
+			selectionChanged();
 		}
 
 	}

@@ -3,21 +3,25 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="_AtZbwdToEeKb2Mvea7mUsQ" label="BSemantix" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/icon32.png" x="120" y="120" width="900" height="700">
     <children xsi:type="basic:PartSashContainer" xmi:id="_p6PhQNXdEeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.partsashcontainer.0" selectedElement="_Atap6dToEeKb2Mvea7mUsQ" horizontal="true">
       <children xsi:type="advanced:PerspectiveStack" xmi:id="_Atap6dToEeKb2Mvea7mUsQ" elementId="PerspectiveStack">
-        <children xsi:type="advanced:Perspective" xmi:id="_Atap6tToEeKb2Mvea7mUsQ" selectedElement="_Atap69ToEeKb2Mvea7mUsQ">
-          <children xsi:type="basic:PartSashContainer" xmi:id="_Atap69ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.sashc">
-            <children xsi:type="basic:PartSashContainer" xmi:id="_7WyoUN2LEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partsashcontainer.1" containerData="11700" horizontal="true">
-              <children xsi:type="basic:PartStack" xmi:id="_EPI3IN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.0" containerData="15917">
-                <children xsi:type="basic:InputPart" xmi:id="_fCP1MOe-EeKl0ueTYh8_5Q" elementId="me.bahadir.bsemantix.inputpart.editor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EditorPart" label="OWL Editor">
-                  <properties key="codeText"/>
+        <children xsi:type="advanced:Perspective" xmi:id="_Atap6tToEeKb2Mvea7mUsQ">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_fpQmAOkrEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.2" horizontal="true">
+            <children xsi:type="basic:PartStack" xmi:id="_XqE3AOktEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.projex" containerData="4195"/>
+            <children xsi:type="basic:PartSashContainer" xmi:id="_2CGQQOkrEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.3" containerData="15805">
+              <children xsi:type="basic:PartSashContainer" xmi:id="_IgDZUOksEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.4" containerData="12337" horizontal="true">
+                <children xsi:type="basic:PartStack" xmi:id="_EPI3IN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.editorStack" containerData="16256">
+                  <children xsi:type="basic:InputPart" xmi:id="_fCP1MOe-EeKl0ueTYh8_5Q" elementId="me.bahadir.bsemantix.inputpart.editor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EditorPart" label="OWL Editor">
+                    <properties key="codeText"/>
+                  </children>
+                  <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.bench" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="3D Workbench"/>
+                  <children xsi:type="basic:Part" xmi:id="_KoZAMOlrEeKjSZnzUfh6eg" elementId="me.bahadir.bsemantix.part.DecisionEditor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DecisionEditorPart" label="Decision Editor"/>
                 </children>
-                <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.bench" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="3D Workbench"/>
+                <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.rightstack" containerData="3744">
+                  <children xsi:type="basic:Part" xmi:id="_CnlVYN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right.path" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EntitiesListPart" label="Entities"/>
+                </children>
               </children>
-              <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right" containerData="4083">
-                <children xsi:type="basic:Part" xmi:id="_CnlVYN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right.path" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EntitiesListPart" label="Entities"/>
+              <children xsi:type="basic:PartStack" xmi:id="_MYmYMOksEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.1" containerData="7663">
+                <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console"/>
               </children>
-            </children>
-            <children xsi:type="basic:PartStack" xmi:id="_xKGqgN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.1" containerData="4000">
-              <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console"/>
             </children>
           </children>
         </children>
