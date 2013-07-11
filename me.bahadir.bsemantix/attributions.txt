@@ -8,5 +8,14 @@ attributions:
 	http://www.iconfinder.com/icondetails/36079/16/folder_page_white_icon
 	Designer: FatCow Web Hosting - http://www.fatcow.com/
 	
+3. 	icon: leaf.png
+	http://www.iconfinder.com/icondetails/26581/16/leaf_icon
+	Designer: Yusuke Kamiyamane - http://p.yusukekamiyamane.com/
 	
+4.	icon: question.png
+	http://www.iconfinder.com/icondetails/106228/16/question_icon
+	Designer: http://www.iconfinder.com/icondetails/106228/16/question_icon
 	
+5.	icon: xml.png
+	http://www.iconfinder.com/icondetails/131655/16/xml_icon
+	Designer: Aha-Soft - http://www.aha-soft.com/	

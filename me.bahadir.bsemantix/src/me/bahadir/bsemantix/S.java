@@ -1,7 +1,13 @@
 package me.bahadir.bsemantix;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,67 +47,68 @@ import org.eclipse.ui.PlatformUI;
 import org.jgrapht.GraphPath;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+
 /**
  * Global Static methods
+ * 
  * @author Bahadir
- *
+ * 
  */
 public class S {
-	
-	public static Vector3d unitVectorX = new Vector3d(1,0,0);
-	public static Vector3d unitVectorY = new Vector3d(0,1,0);
-	public static Vector3d unitVectorZ = new Vector3d(0,0,1);
-	
+
+	public static Vector3d unitVectorX = new Vector3d(1, 0, 0);
+	public static Vector3d unitVectorY = new Vector3d(0, 1, 0);
+	public static Vector3d unitVectorZ = new Vector3d(0, 0, 1);
+
 	public static Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
 	public static Color3f darkgrey = new Color3f(0.25f, 0.25f, 0.25f);
 	public static Color3f grey = new Color3f(0.5f, 0.5f, 0.5f);
 	public static Color3f lightgrey = new Color3f(0.75f, 0.75f, 0.75f);
 	public static Color3f white = new Color3f(1.0f, 1.0f, 1.0f);
-	
+
 	public static IEventBroker broker;
 	public static MApplication application;
 
+	public static String xmlize(String s) {
+		return s.replace("<", "").replace(">", "");
+	}
 	
 	public static FontData[] extendFontData(FontData[] originalData, int additionalStyle) {
-        FontData[] styleData = new FontData[originalData.length];
-        for (int i = 0; i < styleData.length; i++) {
-                FontData base = originalData[i];
-                styleData[i] = new FontData(base.getName(), base.getHeight(), base.getStyle() | additionalStyle);
-        }
-        return styleData;
+		FontData[] styleData = new FontData[originalData.length];
+		for (int i = 0; i < styleData.length; i++) {
+			FontData base = originalData[i];
+			styleData[i] = new FontData(base.getName(), base.getHeight(), base.getStyle() | additionalStyle);
+		}
+		return styleData;
 	}
-	
+
 	public static Color SWTColor(int r, int g, int b) {
-		return new Color(Display.getCurrent(), r,g,b);
+		return new Color(Display.getCurrent(), r, g, b);
 	}
-	
+
 	public static Image getSharedImage(String symbolicName) {
 		return PlatformUI.getWorkbench().getSharedImages().getImage(symbolicName);
 	}
-	
+
 	public EModelService getModelService() {
-	    return (EModelService) S.application.getContext().get(EModelService.class.getName());
+		return (EModelService) S.application.getContext().get(EModelService.class.getName());
 	}
-	
+
 	public static void runJob(Job job) {
 		setupJob();
 		job.schedule();
 	}
-	
+
 	public static void setupJob() {
 		System.out.println("ko");
 		// Setting the progress monitor
 		IJobManager manager = Job.getJobManager();
-//		EModelService service = (EModelService) BenchPart.application
-//				.getContext().get(EModelService.class.getName());
+		// EModelService service = (EModelService) BenchPart.application
+		// .getContext().get(EModelService.class.getName());
 
 		// ToolItem has the ID "statusbar" in the model
-		EModelService service = (EModelService) S.application
-				.getContext().get(EModelService.class.getName());
-		MToolControl element = (MToolControl) service.find(
-				"me.bahadir.bsemantix.toolcontrol.prgbar",
-				S.application);
-
+		EModelService service = (EModelService) S.application.getContext().get(EModelService.class.getName());
+		MToolControl element = (MToolControl) service.find("me.bahadir.bsemantix.toolcontrol.prgbar", S.application);
 
 		Object widget = element.getObject();
 		final IProgressMonitor p = (IProgressMonitor) widget;
@@ -115,11 +122,11 @@ public class S {
 
 		manager.setProgressProvider(provider);
 	}
-	
+
 	public static boolean bitTest(int bitset, int flagset) {
-	        return (bitset & flagset) == flagset;
-	   }
-	
+		return (bitset & flagset) == flagset;
+	}
+
 	public static interface WalkListener {
 		public void onObject(Object object);
 	}
@@ -130,9 +137,9 @@ public class S {
 
 	public static Vector3d randomVector(double radius) {
 		Random rnd = new Random();
-		return new Vector3d(rnd.nextDouble() * radius,rnd.nextDouble() * radius,rnd.nextDouble() * radius);
+		return new Vector3d(rnd.nextDouble() * radius, rnd.nextDouble() * radius, rnd.nextDouble() * radius);
 	}
-	
+
 	public static InputStream readFile(URL url) {
 
 		try {
@@ -154,38 +161,37 @@ public class S {
 
 	public static List<BenchObject> getCrumbles(GraphPath<SphereNode, NeuralEdge> path) {
 		final List<BenchObject> objects = new LinkedList<>();
-		
+
 		walkPath(path, new WalkListener() {
-			
+
 			@Override
 			public void onObject(Object object) {
-				objects.add((BenchObject)object);
-				
+				objects.add((BenchObject) object);
+
 			}
 		});
-		
+
 		return objects;
 	}
-	
+
 	public static Point2d get3DTo2DPoint(Canvas3D canvas3D, Point3d point3d) {
 
 		Transform3D temp = new Transform3D();
 		canvas3D.getVworldToImagePlate(temp);
 		temp.transform(point3d);
 		Point2d point2d = new Point2d();
-		canvas3D.getPixelLocationFromImagePlate(point3d,point2d);
+		canvas3D.getPixelLocationFromImagePlate(point3d, point2d);
 		return point2d;
 	}
-	
-	public static void walkPath(GraphPath<SphereNode, NeuralEdge> path,	WalkListener listener) {
+
+	public static void walkPath(GraphPath<SphereNode, NeuralEdge> path, WalkListener listener) {
 
 		SphereNode ls = path.getStartVertex();
 		listener.onObject(ls);
 		SphereNode nextS = null;
 		for (NeuralEdge ne : path.getEdgeList()) {
 
-			nextS = ne.getSourceVertex().equals(ls) ? ne.getTargetVertex() : ne
-					.getSourceVertex();
+			nextS = ne.getSourceVertex().equals(ls) ? ne.getTargetVertex() : ne.getSourceVertex();
 
 			listener.onObject(ne);
 			listener.onObject(nextS);
@@ -197,8 +203,36 @@ public class S {
 			Console.println("S> Path not ended as expected!");
 		}
 	}
-	
+
 	public static BoundingSphere getBoundingSphere(float size) {
 		return new BoundingSphere(new Point3d(), size);
+	}
+
+	public static byte[] serialize(Object o) throws IOException {
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		try {
+			out = new ObjectOutputStream(bos);
+			out.writeObject(o);
+			return bos.toByteArray();
+
+		} finally {
+			out.close();
+			bos.close();
+		}
+	}
+
+	public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream bis = new ByteArrayInputStream(data);
+		ObjectInput in = null;
+		try {
+			in = new ObjectInputStream(bis);
+			return in.readObject();
+
+		} finally {
+			bis.close();
+			in.close();
+		}
 	}
 }

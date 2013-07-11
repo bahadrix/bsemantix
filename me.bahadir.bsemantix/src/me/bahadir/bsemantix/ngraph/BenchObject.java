@@ -1,5 +1,6 @@
 package me.bahadir.bsemantix.ngraph;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.media.j3d.TransformGroup;
@@ -8,7 +9,7 @@ import me.bahadir.bsemantix.parts.TreePair;
 
 
 
-public interface BenchObject {
+public interface BenchObject extends Serializable{
 
 	public void onClick();
 	public void onUnClick();

@@ -13,6 +13,10 @@ import me.bahadir.bsemantix.parts.TreePair;
 
 
 public class SynapticEdge extends NeuralEdge {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 462494079989861581L;
 	protected static Logger log = Logger.getLogger(SynapticEdge.class.getSimpleName());
 	private Synapse synapse;
 	

@@ -42,6 +42,10 @@ import com.sun.j3d.utils.geometry.Text2D;
 
 public class SphereNode implements BenchObject {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3945818628723369739L;
 	protected static Logger log = Logger.getLogger(SphereNode.class.getSimpleName());
 	public static float RADIUS = 0.1f;
 	private static float FOCUS_SPHERE_RADIUS = 0.13f;
