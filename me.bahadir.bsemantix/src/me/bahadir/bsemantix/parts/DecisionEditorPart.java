@@ -21,7 +21,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -66,6 +69,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -189,10 +193,24 @@ public class DecisionEditorPart {
 	}
 
 	private void exportXML() {
+		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+		dialog.setFilterExtensions(new String[]{"*.xml"});
+		dialog.setOverwrite(true);
+		
+		String path = dialog.open();
+		if(path == null) return;
 
 		try {
-			activeTree.saveXML(new FileOutputStream(new File("C:\\Users\\Bahadir\\Desktop\\chonkaaa.xml")));
+			File file = new File(path);
+			if(file.exists() && !dialog.getOverwrite()) {
+				return;
+			}
+			
+			activeTree.saveXML(new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -205,21 +223,41 @@ public class DecisionEditorPart {
 	
 	private void importXML() {
 		
-		reset();
+		FileDialog dialog = new FileDialog(shell);
+		dialog.setFilterExtensions(new String[]{"*.xml"});
+		String path = dialog.open();
+		
+		
+		
+		if(path == null) return;
+		
+		
 
 		   //S.showErrorDialog("Hata", new Exception("yalan dolan hep"), shell);
 		try {
-			File file = new File("C:\\Users\\Bahadir\\Desktop\\chonkaaa.xml");
+			File file = new File(path);
 			JAXBContext jaxbContext = JAXBContext.newInstance(DecisionTreeData.class);
 	 
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			
+			jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
+				
+				@Override
+				public boolean handleEvent(ValidationEvent event) {
+					switch (event.getSeverity()) {
+					case ValidationEvent.FATAL_ERROR:
+						log.severe("Can not read decision xml file. Please check format..");
+						return true;
+					}
+					return false;
+				}
+			});
 			DecisionTreeData dData = (DecisionTreeData) jaxbUnmarshaller.unmarshal(file);
+			reset();
 			activeTree.loadData(dData);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
 	
 	}

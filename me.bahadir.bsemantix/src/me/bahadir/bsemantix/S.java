@@ -82,17 +82,6 @@ public class S {
 		return s.replace("<", "").replace(">", "");
 	}
 	
-	public static void showErrorDialog(String title, Exception ex, Shell shell) {
-		final String PID = Activator.getContext().getBundle().getSymbolicName();
-		   MultiStatus info = new MultiStatus(PID, 1, ex.getMessage(), null);
-		   for(StackTraceElement se : ex.getStackTrace()) {
-			   info.add(new Status(IStatus.ERROR, PID, 1,
-					   se.toString()
-					   , null));
-		   }
-		   //Status status = new Status(IStatus.ERROR, PID,  reason, ex);
-		   ErrorDialog.openError(shell, title, null, info);
-	}
 	
 	public static Element getFirstElementOfTag(Element e, String...tagNames) {
 		

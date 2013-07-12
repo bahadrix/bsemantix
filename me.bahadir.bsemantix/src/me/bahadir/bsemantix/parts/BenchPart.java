@@ -60,6 +60,7 @@ public class BenchPart extends PartBase {
 		
 	}
 	
+	
 
 	@PostConstruct
 	public void createComposite(Composite parent, MApplication application) {
