@@ -49,6 +49,14 @@ public class Answer extends GraphConnection{
 		public SynonymSet getSynonyms() {
 			return synonyms;
 		}
+
+		public QuestionData getTargetQuestion() {
+			return targetQuestion;
+		}
+
+		public LeafData getTargetLeaf() {
+			return targetLeaf;
+		}
 		
 		
 		
@@ -69,7 +77,7 @@ public class Answer extends GraphConnection{
 	public AnswerData getAnswerData() {
 		if(destination instanceof Question) {
 			Question q = (Question) destination;
-			aData.targetQuestion = q.getQuestionData();
+			aData.targetQuestion = q.getQuestionData(true);
 		} else {
 			Leaf l = (Leaf) destination;
 			aData.targetLeaf = l.getLeafData();

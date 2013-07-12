@@ -2,11 +2,15 @@ package me.bahadir.bsemantix.parts;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,6 +21,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,6 +33,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import me.bahadir.bsemantix.Activator;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
@@ -44,7 +50,12 @@ import me.bahadir.bsemantix.ngraph.dtree.Question.QuestionData;
 import me.bahadir.bsemantix.ngraph.dtree.SynonymSet;
 import me.bahadir.bsemantix.semantic.SampleOM;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -57,6 +68,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.zest.core.widgets.GraphConnection;
@@ -74,7 +87,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class DecisionEditorPart {
 	protected static Logger log = Logger.getLogger(DecisionEditorPart.class.getSimpleName());
-	private Composite treeBench;
+	private Shell shell;
 	private DecisionTree activeTree;
 	private Menu addLeafMenu;
 
@@ -84,8 +97,8 @@ public class DecisionEditorPart {
 	}
 
 	@PostConstruct
-	public void postConstruct(final Composite parent) {
-
+	public void postConstruct(final Composite parent, Shell shell) {
+		this.shell = shell;
 		parent.setLayout(new GridLayout());
 
 		ToolBar bar = new ToolBar(parent, SWT.FLAT);
@@ -177,63 +190,38 @@ public class DecisionEditorPart {
 
 	private void exportXML() {
 
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		activeTree.saveXML(baos);
-//		try {
-//			log.info("\r\n" + new String(baos.toByteArray(), "UTF-8"));
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-
 		try {
-			
-			Question q = (Question)activeTree.findRoot();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			q.getQuestionData().asDOMElement(baos);
-			log.info(new String(baos.toByteArray(), "UTF-8"));
-			
-		} catch (UnsupportedEncodingException e) {
+			activeTree.saveXML(new FileOutputStream(new File("C:\\Users\\Bahadir\\Desktop\\chonkaaa.xml")));
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+//	
 
 		
 	}
 
+	
 	private void importXML() {
 		
-		//reset();
+		reset();
 
-		SynonymSet synonyms = new SynonymSet();
-		synonyms.add("tabi canım");
-		synonyms.add("elbette");
-		AnswerData aData = new AnswerData("evet", "madde tomatis", synonyms);
-		//aData.asDOMElement(AnswerData.class);
-//		try {
-//			File fXmlFile = new File("C:\\Users\\vaıo\\Desktop\\test.xml");
-//			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//			DocumentBuilder dBuilder;
-//
-//			dBuilder = dbFactory.newDocumentBuilder();
-//
-//			Document doc = dBuilder.parse(fXmlFile);
-//
-//			doc.getDocumentElement().normalize();
-//
-//			recurseParse((Element) doc.getElementsByTagName("question").item(0));
-//
-//		} catch (ParserConfigurationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SAXException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		   //S.showErrorDialog("Hata", new Exception("yalan dolan hep"), shell);
+		try {
+			File file = new File("C:\\Users\\Bahadir\\Desktop\\chonkaaa.xml");
+			JAXBContext jaxbContext = JAXBContext.newInstance(DecisionTreeData.class);
+	 
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			
+			DecisionTreeData dData = (DecisionTreeData) jaxbUnmarshaller.unmarshal(file);
+			activeTree.loadData(dData);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
 	}
 
 	private GraphNode recurseParse(Element mother) {
@@ -279,15 +267,7 @@ public class DecisionEditorPart {
 
 	private void reset() {
 
-		// Dispose connections
-		while (activeTree.getConnections().size() > 0) {
-			((GraphConnection) activeTree.getConnections().get(0)).dispose();
-		}
-
-		// Dispose nodes
-		while (activeTree.getNodes().size() > 0) {
-			((GraphNode) activeTree.getNodes().get(0)).dispose();
-		}
+		activeTree.disposeChildren();
 
 		// Dispose leaf menu
 		while (addLeafMenu.getItemCount() > 0) {

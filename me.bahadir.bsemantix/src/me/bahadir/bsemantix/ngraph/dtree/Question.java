@@ -58,6 +58,10 @@ public class Question extends GraphNode implements Serializable{
 		public final String getShortText() {
 			return  shortText;
 		}
+
+		public List<AnswerData> getAnswerDatas() {
+			return answerDatas;
+		}
 		
 		
 	}
@@ -90,7 +94,11 @@ public class Question extends GraphNode implements Serializable{
 	}
 	
 	public QuestionData getQuestionData() {
-		
+		return getQuestionData(false);
+	}
+	
+	public QuestionData getQuestionData(boolean refresh) {
+		if(!refresh) return qData;
 		qData.locationX = this.getLocation().x;
 		qData.locationY = this.getLocation().y;
 		qData.answerDatas.clear();

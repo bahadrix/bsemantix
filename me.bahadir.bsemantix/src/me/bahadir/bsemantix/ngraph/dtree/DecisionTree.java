@@ -1,12 +1,18 @@
 package me.bahadir.bsemantix.ngraph.dtree;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,7 +31,9 @@ import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafType;
 import me.bahadir.bsemantix.ngraph.dtree.Question.QuestionData;
+import me.bahadir.bsemantix.parts.DecisionEditorPart;
 
+import org.apache.jena.atlas.logging.Log;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.zest.core.widgets.Graph;
@@ -36,11 +44,10 @@ import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+@XmlRootElement(name="decisiontree")
+public class DecisionTree extends Graph{
 
-public class DecisionTree extends Graph implements Serializable{
-
-
-	private static final long serialVersionUID = 437882257184307685L;
+	protected static Logger log = Logger.getLogger(DecisionTree.class.getSimpleName());
 
 	public static enum NodeType {QUESTION, LEAF};
 	public static enum NodeStylePreset{BLUE, ORANGE}
@@ -48,9 +55,19 @@ public class DecisionTree extends Graph implements Serializable{
 	
 	private boolean singleTarget = false;
 
-	public static class DecisionTreeData {
-		private final String sourceUri;
-		private final List<String> leafUris;
+	@XmlRootElement(name="decisiontree")
+	public static class DecisionTreeData extends JAXNode {
+		
+		@XmlAttribute private String sourceUri;
+		
+		@XmlElementWrapper(name="leafuris")
+		@XmlElement(name="leafuri")	private List<String> leafUris;
+		
+		
+		@XmlElement(name="question") private QuestionData rootQuestionData;
+		
+		public DecisionTreeData() {};
+		
 		public DecisionTreeData(String sourceUri, List<String> leafUris) {
 			this.sourceUri = sourceUri;
 			this.leafUris = leafUris;
@@ -75,9 +92,49 @@ public class DecisionTree extends Graph implements Serializable{
 		setLayoutAlgorithm(new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
 	}
 
+	public void loadData(DecisionTreeData decData) {
+		this.decData = decData;
+		if(decData.rootQuestionData != null) {
+			loadQuestionRoot(decData.rootQuestionData);
+		}
+	}
+	
+	public void disposeChildren() {
+		// Dispose connections
+		while (getConnections().size() > 0) {
+			((GraphConnection) getConnections().get(0)).dispose();
+		}
 
+		// Dispose nodes
+		while (getNodes().size() > 0) {
+			((GraphNode) getNodes().get(0)).dispose();
+		}
+	}
+	
+	private Question loadQuestionRoot(QuestionData qData) {
+		Question q = new Question(this, qData);
+		System.out.println(qData.getAnswerDatas().toString());
+		for(AnswerData aData : qData.getAnswerDatas()) {
+			
+			System.out.println(aData);
+			
+			GraphNode target;
+			if(aData.getTargetQuestion() != null) {
+				target = loadQuestionRoot(aData.getTargetQuestion()); //recurse
+				
+				
+			} else {
+				target = new Leaf(this, aData.getTargetLeaf());
+			}
+			
+			new Answer(this, q, target, aData);
+		}
+		
+		return q;
+	}
 	
 	public DecisionTreeData getDecisionTreeData() {
+		decData.rootQuestionData = ((Question)findRoot()).getQuestionData(true);
 		return decData;
 	}
 	
@@ -98,39 +155,9 @@ public class DecisionTree extends Graph implements Serializable{
 	}
 	
 	public void saveXML(OutputStream output) {
-		try {
-			Question root = (Question) findRoot();
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-			Element wrapper = doc.createElement("decisiontree");
-			
-			wrapper.setAttribute("source", getSourceUri());
-			
-			
-			wrapper.appendChild(recurseTag(root,doc));
-			doc.appendChild(wrapper);
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			//StreamResult result = new StreamResult(new File("C:\\Users\\vaýo\\Desktop\\test.xml"));
-			StreamResult result = new StreamResult(output);
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-			transformer.transform(source, result);
-			
-			
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		getDecisionTreeData().asDOMElement(output);
+
 	}
 	public GraphNode findRoot() {
 		for(Object obj : getNodes()) {
@@ -144,55 +171,7 @@ public class DecisionTree extends Graph implements Serializable{
 		return null;
 	}
 	
-	public Element recurseTag(GraphNode root, Document doc) {
-		List<GraphConnection> sourceConns = root.getSourceConnections();
-		
-		Element el = null;
-		
-//		if(root instanceof Question) {
-//			Question q = (Question) root;
-////			startTag = q.getXMLStartTag();
-////			endTag = "</question>";
-//			el = doc.createElement("question");
-//			el.setAttribute("text", q.getQuestionData().getText());
-//			el.setAttribute("shorttext", q.getQuestionData().getShortText());
-//			el.setAttribute("locationX", String.valueOf(q.getLocation().x));
-//			el.setAttribute("locationY", String.valueOf(q.getLocation().y));
-//		} else if(root instanceof Leaf) {
-//			Leaf l = (Leaf) root;
-//			el = doc.createElement("leaf");
-//			el.setAttribute("uri", l.getLeafData().type == LeafType.BLOCK ? "block" : l.getLeafData().outputUri);
-//			el.setAttribute("text", l.getLeafData().text);
-//			el.setAttribute("locationX", String.valueOf(l.getLeafData().));
-//			el.setAttribute("locationY", String.valueOf(l.getLeafData().location.y));
-////			startTag = l.getXMLStartTag();
-////			endTag = "</leaf>";
-//		} else {
-//			return el;
-//		}
-		
-
-		
-		
-		for(GraphConnection conn : sourceConns) {
-			if(conn instanceof Answer) {
-				Answer a = (Answer) conn;
-				Element eAnswer = doc.createElement("answer");
-				
-				eAnswer.setAttribute("text", a.getAnswerData().getText());
-				eAnswer.setAttribute("fact", a.getAnswerData().getFact());
-				eAnswer.setAttribute("synonyms", a.getAnswerData().getSynonyms().toString());
-				eAnswer.appendChild(recurseTag(conn.getDestination(), doc));
-				el.appendChild(eAnswer);
-				//childCode += recurseTag(conn.getDestination());
-			}
-		}
-
-		
 	
-
-		return el;
-	}
 	public GraphConnection getDirectedConnection(GraphNode source, GraphNode target) {
 		
 		for(Object obj : getConnections()) {

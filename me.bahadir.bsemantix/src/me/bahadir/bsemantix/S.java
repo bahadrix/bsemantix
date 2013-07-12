@@ -29,7 +29,10 @@ import me.bahadir.bsemantix.parts.PathLabelProvider;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.ProgressProvider;
@@ -37,11 +40,13 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.jgrapht.GraphPath;
@@ -75,6 +80,18 @@ public class S {
 
 	public static String xmlize(String s) {
 		return s.replace("<", "").replace(">", "");
+	}
+	
+	public static void showErrorDialog(String title, Exception ex, Shell shell) {
+		final String PID = Activator.getContext().getBundle().getSymbolicName();
+		   MultiStatus info = new MultiStatus(PID, 1, ex.getMessage(), null);
+		   for(StackTraceElement se : ex.getStackTrace()) {
+			   info.add(new Status(IStatus.ERROR, PID, 1,
+					   se.toString()
+					   , null));
+		   }
+		   //Status status = new Status(IStatus.ERROR, PID,  reason, ex);
+		   ErrorDialog.openError(shell, title, null, info);
 	}
 	
 	public static Element getFirstElementOfTag(Element e, String...tagNames) {
