@@ -47,6 +47,8 @@ import org.eclipse.ui.PlatformUI;
 import org.jgrapht.GraphPath;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Global Static methods
@@ -56,6 +58,8 @@ import org.osgi.framework.FrameworkUtil;
  */
 public class S {
 
+	
+	
 	public static Vector3d unitVectorX = new Vector3d(1, 0, 0);
 	public static Vector3d unitVectorY = new Vector3d(0, 1, 0);
 	public static Vector3d unitVectorZ = new Vector3d(0, 0, 1);
@@ -71,6 +75,37 @@ public class S {
 
 	public static String xmlize(String s) {
 		return s.replace("<", "").replace(">", "");
+	}
+	
+	public static Element getFirstElementOfTag(Element e, String...tagNames) {
+		
+		
+		NodeList list = e.getChildNodes();
+		for(int i = 0; i < list.getLength(); i++) {
+			Object o = list.item(i);
+			if(o instanceof Element) {
+				Element child = (Element) o;
+				for(String tagName : tagNames) {
+					if(child.getTagName().equals(tagName)) return child;
+				}
+						
+			}
+		}
+		
+		return null;
+	}
+	
+	public static String implode(String separator, String... data) {
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < data.length - 1; i++) {
+	    //data.length - 1 => to not add separator at the end
+	        if (!data[i].matches(" *")) {//empty string are ""; " "; "  "; and so on
+	            sb.append(data[i]);
+	            sb.append(separator);
+	        }
+	    }
+	    sb.append(data[data.length - 1]);
+	    return sb.toString();
 	}
 	
 	public static FontData[] extendFontData(FontData[] originalData, int additionalStyle) {

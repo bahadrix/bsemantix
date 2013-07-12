@@ -1,15 +1,19 @@
 package me.bahadir.bsemantix.ngraph.dtree;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.zest.core.widgets.GraphNode;
+import org.w3c.dom.Element;
 
 public class Question extends GraphNode implements Serializable{
 
@@ -17,15 +21,34 @@ public class Question extends GraphNode implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -7522215234845313353L;
-	private String text;
-	private String shortText;
 	
-	
-	public static class QuestionData {
-		private String text;
-		private String shortText;
-		private Point location;
+	@XmlRootElement(name="question")
+	public static class QuestionData extends JAXNode{
+		
+		@XmlAttribute private String text;
+		@XmlAttribute private String shortText;
+		@XmlAttribute private int locationX = 0;
+		@XmlAttribute private int locationY = 0;
+		
+		@XmlElement(name="answer") private List<AnswerData> answerDatas;
+		
+		
+		
+		public static QuestionData createFromElement(Element questionElement) {
+			QuestionData qData = new QuestionData(
+					questionElement.getAttribute("text"), 
+					questionElement.getAttribute("shorttext"));
+			
+//			qData.location = new Point(
+//					Integer.parseInt(questionElement.getAttribute("locationX")),
+//					Integer.parseInt(questionElement.getAttribute("locationY")));
+			return qData;
+		}
+		
+		public QuestionData() {};
+		
 		public QuestionData(String text, String shortText) {
+			this.answerDatas = new LinkedList<>();
 			this.text = text; 
 			this.shortText = shortText;
 		}
@@ -58,6 +81,8 @@ public class Question extends GraphNode implements Serializable{
 		setMyStyle();
 		this.qData = qData;
 		this.decisionTree = decisionTree;
+		this.setLocation(qData.locationX, qData.locationY);
+		
 	}
 
 	public List<GraphNode> getChildren() {
@@ -66,8 +91,16 @@ public class Question extends GraphNode implements Serializable{
 	
 	public QuestionData getQuestionData() {
 		
-		this.qData.location = this.getLocation();
-		
+		qData.locationX = this.getLocation().x;
+		qData.locationY = this.getLocation().y;
+		qData.answerDatas.clear();
+		for(int i = 0; i < getSourceConnections().size(); i++) {
+			Object obj = getSourceConnections().get(i);
+			if(obj instanceof Answer) {
+				Answer a = (Answer) obj;
+				qData.answerDatas.add(a.getAnswerData());
+			}
+		}
 		return qData;
 	}
 	
