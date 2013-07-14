@@ -1,16 +1,9 @@
 package me.bahadir.bsemantix.parts;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,46 +12,21 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
-import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import me.bahadir.bsemantix.Activator;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree.DecisionTreeData;
-import me.bahadir.bsemantix.ngraph.dtree.Answer;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf;
-import me.bahadir.bsemantix.ngraph.dtree.SynonymSet;
-import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
-import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafType;
 import me.bahadir.bsemantix.ngraph.dtree.Question;
-import me.bahadir.bsemantix.ngraph.dtree.Question.QuestionData;
-import me.bahadir.bsemantix.ngraph.dtree.SynonymSet;
 import me.bahadir.bsemantix.semantic.SampleOM;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.Focus;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -72,28 +40,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class DecisionEditorPart {
-	protected static Logger log = Logger.getLogger(DecisionEditorPart.class.getSimpleName());
+	
+	protected static Logger log = Logger.getLogger(DecisionEditorPart.class
+			.getSimpleName());
+	
+	public static final String TOPIC_TREE_ITEM_SELECTED = "DT_ITEM_SELECTED";
+	public static final String TOPIC_TREE_ITEM_UNSELECTED = "DT_ITEM_UNSELECTED";
+	
 	private Shell shell;
 	private DecisionTree activeTree;
 	private Menu addLeafMenu;
+
+	private enum MouseClickType {
+		DOUBLE, RIGHT
+	};
 
 	@Inject
 	public DecisionEditorPart() {
@@ -101,7 +70,7 @@ public class DecisionEditorPart {
 	}
 
 	@PostConstruct
-	public void postConstruct(final Composite parent, Shell shell) {
+	public void postConstruct(final Composite parent, final Shell shell) {
 		this.shell = shell;
 		parent.setLayout(new GridLayout());
 
@@ -120,7 +89,8 @@ public class DecisionEditorPart {
 
 				ToolItem item = (ToolItem) e.widget;
 				Rectangle rect = item.getBounds();
-				Point pt = item.getParent().toDisplay(new Point(rect.x, rect.y));
+				Point pt = item.getParent()
+						.toDisplay(new Point(rect.x, rect.y));
 				addLeafMenu.setLocation(pt.x, pt.y + rect.height);
 				addLeafMenu.setVisible(true);
 			}
@@ -185,6 +155,74 @@ public class DecisionEditorPart {
 
 			}
 		});
+		
+		
+		
+		activeTree.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Object o = activeTree.getSelection().size() < 1 ? null : activeTree.getSelection().get(0);
+		
+					S.broker.post(TOPIC_TREE_ITEM_SELECTED, o);
+			
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		activeTree.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				DecisionTree dec = (DecisionTree) e.getSource();
+				if (dec.getSelection().size() < 1)
+					return;
+				Object o = dec.getSelection().get(0);
+
+				if (o == null)
+					return;
+				if (e.button == SWT.BUTTON2) {
+					if (o instanceof GraphNode) {
+
+						onNodeMouseClick((GraphNode) o, MouseClickType.RIGHT);
+
+					} else if (o instanceof GraphConnection) {
+						onConnectionMouseClick((GraphConnection) o,
+								MouseClickType.RIGHT);
+					}
+				}
+
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				DecisionTree dec = (DecisionTree) e.getSource();
+				if (dec.getSelection().size() < 1)
+					return;
+				Object o = dec.getSelection().get(0);
+
+				if (o == null)
+					return;
+				if (o instanceof GraphNode) {
+					onNodeMouseClick((GraphNode) o, MouseClickType.DOUBLE);
+
+				} else if (o instanceof GraphConnection) {
+					onConnectionMouseClick((GraphConnection) o,
+							MouseClickType.DOUBLE);
+				}
+			}
+		});
 
 		generateMenus(bar);
 
@@ -192,20 +230,37 @@ public class DecisionEditorPart {
 
 	}
 
+	public void onNodeMouseClick(GraphNode node, MouseClickType clickType) {
+		switch(clickType) {
+		case DOUBLE:
+			break;
+		case RIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onConnectionMouseClick(GraphConnection conn,
+			MouseClickType clickType) {
+		System.out.println(conn);
+	}
+
 	private void exportXML() {
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-		dialog.setFilterExtensions(new String[]{"*.xml"});
+		dialog.setFilterExtensions(new String[] { "*.xml" });
 		dialog.setOverwrite(true);
-		
+
 		String path = dialog.open();
-		if(path == null) return;
+		if (path == null)
+			return;
 
 		try {
 			File file = new File(path);
-			if(file.exists() && !dialog.getOverwrite()) {
+			if (file.exists() && !dialog.getOverwrite()) {
 				return;
 			}
-			
+
 			activeTree.saveXML(new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -214,33 +269,29 @@ public class DecisionEditorPart {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//	
 
-		
+		//
+
 	}
 
-	
 	private void importXML() {
-		
-		FileDialog dialog = new FileDialog(shell);
-		dialog.setFilterExtensions(new String[]{"*.xml"});
-		String path = dialog.open();
-		
-		
-		
-		if(path == null) return;
-		
-		
 
-		   //S.showErrorDialog("Hata", new Exception("yalan dolan hep"), shell);
+		FileDialog dialog = new FileDialog(shell);
+		dialog.setFilterExtensions(new String[] { "*.xml" });
+		String path = dialog.open();
+
+		if (path == null)
+			return;
+
+		// S.showErrorDialog("Hata", new Exception("yalan dolan hep"), shell);
 		try {
 			File file = new File(path);
-			JAXBContext jaxbContext = JAXBContext.newInstance(DecisionTreeData.class);
-	 
+			JAXBContext jaxbContext = JAXBContext
+					.newInstance(DecisionTreeData.class);
+
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
-				
+
 				@Override
 				public boolean handleEvent(ValidationEvent event) {
 					switch (event.getSeverity()) {
@@ -251,55 +302,14 @@ public class DecisionEditorPart {
 					return false;
 				}
 			});
-			DecisionTreeData dData = (DecisionTreeData) jaxbUnmarshaller.unmarshal(file);
+			DecisionTreeData dData = (DecisionTreeData) jaxbUnmarshaller
+					.unmarshal(file);
 			reset();
 			activeTree.loadData(dData);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
-	
-	}
-
-	private GraphNode recurseParse(Element mother) {
-		GraphNode result = null;
-		if (mother.getTagName().equals("question")) {
-
-			Question q = new Question(activeTree, QuestionData.createFromElement(mother));
-			result = q;
-			NodeList answerNodes = mother.getChildNodes();
-
-			for (int i = 0; i < answerNodes.getLength(); i++) {
-				if (answerNodes.item(i) instanceof Element) {
-					Element eAnswer = (Element) answerNodes.item(i);
-					GraphNode target = null;
-
-					Element firstElement = S.getFirstElementOfTag(eAnswer, "question", "leaf");
-
-
-					if (firstElement == null) {
-						log.severe(q.getText() + " answer must have exactly 1 endpoint");
-					} else {
-						if(firstElement.getNodeName().equals("question")) {
-							target = recurseParse(firstElement);
-						} else {
-							target =new Leaf(activeTree, LeafData.createFromElement(firstElement));
-						}
-						Answer a = new Answer(activeTree, q, target, 
-								new AnswerData(eAnswer.getAttribute("text"), eAnswer.getAttribute("fact"), null));
-					}
-					
-
-			
-					
-
-				}
-			}
-
-		} // eof if question element
-		
-		return result;
+		}
 
 	}
 
@@ -326,7 +336,8 @@ public class DecisionEditorPart {
 		if (object instanceof Question) {
 			Question source = (Question) object;
 			Question target = activeTree.addQuestion("<question>");
-			activeTree.addAnswer(source, target, new AnswerData("<answer>", "<fact>"));
+			activeTree.addAnswer(source, target, new AnswerData("<answer>",
+					"<fact>"));
 		} else {
 			log.warning("You must select a question node");
 
@@ -344,11 +355,13 @@ public class DecisionEditorPart {
 		Object object = activeTree.getSelection().get(selectSize - 1);
 		if (object instanceof Question) {
 			Question source = (Question) object;
-			Leaf targetLeaf = leaf == null ? activeTree.createBlockLeaf() : leaf;
+			Leaf targetLeaf = leaf == null ? activeTree.createBlockLeaf()
+					: leaf;
 
 			if (!activeTree.hasDirectedConnection(source, targetLeaf)) {
 
-				activeTree.addAnswer(source, targetLeaf, new AnswerData("<answer>", "<fact>"));
+				activeTree.addAnswer(source, targetLeaf, new AnswerData(
+						"<answer>", "<fact>"));
 				onItemAdded();
 			} else {
 				log.warning("these nodes already connected");
@@ -427,21 +440,29 @@ public class DecisionEditorPart {
 
 		List<String> targets = new LinkedList<>();
 		targets.add(sn2.getOntClass().getURI());
-		DecisionTree decTree = new DecisionTree(parent, ng, new DecisionTreeData(sn1.getOntClass().getURI(), targets));
+		DecisionTree decTree = new DecisionTree(parent, ng,
+				new DecisionTreeData(sn1.getOntClass().getURI(), targets));
 		decTree.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Question qSicakMi = decTree.addQuestion("Madde sıcak mı?");
 		Question qCokMuSicak = decTree.addQuestion("Çok mu sıcak?");
-		decTree.addAnswer(qSicakMi, qCokMuSicak, new AnswerData("evet", "madde sıcak"));
-		decTree.addAnswer(qSicakMi, decTree.createBlockLeaf(), new AnswerData("hayır", "madde sıcak değil"));
+		decTree.addAnswer(qSicakMi, qCokMuSicak, new AnswerData("evet",
+				"madde sıcak"));
+		decTree.addAnswer(qSicakMi, decTree.createBlockLeaf(), new AnswerData(
+				"hayır", "madde sıcak değil"));
 
-		Question qYaniyorMu = decTree.addQuestion("Madde yanıyor mu?", "Yanıyor mu?");
+		Question qYaniyorMu = decTree.addQuestion("Madde yanıyor mu?",
+				"Yanıyor mu?");
 
-		decTree.addAnswer(qCokMuSicak, decTree.createBlockLeaf(), new AnswerData("biraz sıcak", "madde biraz sıcak"));
-		decTree.addAnswer(qCokMuSicak, qYaniyorMu, new AnswerData("evet","madde çok sıcak"));
+		decTree.addAnswer(qCokMuSicak, decTree.createBlockLeaf(),
+				new AnswerData("biraz sıcak", "madde biraz sıcak"));
+		decTree.addAnswer(qCokMuSicak, qYaniyorMu, new AnswerData("evet",
+				"madde çok sıcak"));
 
-		decTree.addAnswer(qYaniyorMu, decTree.getLeaf(sn2), new AnswerData("evet","madde yanıyor"));
-		decTree.addAnswer(qYaniyorMu, decTree.createBlockLeaf(), new AnswerData("hayır", "madde sönük"));
+		decTree.addAnswer(qYaniyorMu, decTree.getLeaf(sn2), new AnswerData(
+				"evet", "madde yanıyor"));
+		decTree.addAnswer(qYaniyorMu, decTree.createBlockLeaf(),
+				new AnswerData("hayır", "madde sönük"));
 
 		return decTree;
 

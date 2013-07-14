@@ -21,7 +21,7 @@
               </children>
               <children xsi:type="basic:PartStack" xmi:id="_MYmYMOksEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.1" containerData="7663">
                 <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console"/>
-                <children xsi:type="basic:Part" xmi:id="_W1ulMOsrEeKZNemYfu9vwQ" elementId="me.bahadir.bsemantix.part.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.PropertiesPart" label="Propa"/>
+                <children xsi:type="basic:Part" xmi:id="_mRY_0OzJEeKR3eTpSca3vg" elementId="me.bahadir.bsemantix.part.dectprop" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DTProperties" label="Properties"/>
               </children>
             </children>
           </children>

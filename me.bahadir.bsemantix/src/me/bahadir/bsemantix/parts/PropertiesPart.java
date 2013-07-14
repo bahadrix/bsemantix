@@ -27,8 +27,22 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.ui.forms.FormDialog;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.custom.CCombo;
 
 public class PropertiesPart extends ViewPart {
+	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 
 
 	@Inject
@@ -48,10 +62,22 @@ public class PropertiesPart extends ViewPart {
 	public void onFocus() {
 		// TODO Your code here
 	}
-
+	@PostConstruct
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		Form frmNewForm = formToolkit.createForm(parent);
+		formToolkit.paintBordersFor(frmNewForm);
+		frmNewForm.setText("Node Editor");
+		frmNewForm.getBody().setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		Section sctnQuestion = formToolkit.createSection(frmNewForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		formToolkit.paintBordersFor(sctnQuestion);
+		sctnQuestion.setText("Question");
 		// TODO Auto-generated method stub
+		
+		
 		
 	}
 
@@ -60,7 +86,4 @@ public class PropertiesPart extends ViewPart {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-	
 }

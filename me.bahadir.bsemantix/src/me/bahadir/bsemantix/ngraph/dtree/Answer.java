@@ -17,14 +17,16 @@ public class Answer extends GraphConnection{
 
 	@XmlRootElement(name="answer")
 	public static class AnswerData extends JAXNode{
-		@XmlAttribute private String text; // evet
-		@XmlAttribute private String fact; // Madde sýcak
+		@XmlAttribute private String text = ""; // evet
+		@XmlAttribute private String fact = ""; // Madde sýcak
 	 
 		@XmlElementWrapper(name="synonyms")
 		@XmlElement(name="synonym")	public SynonymSet synonyms;
 
 		@XmlElement(name="question") private QuestionData targetQuestion = null;
 		@XmlElement(name="leaf") private LeafData targetLeaf = null;
+		
+		private Answer answer = null;
 		
 		public AnswerData() {};
 	
@@ -57,6 +59,16 @@ public class Answer extends GraphConnection{
 		public LeafData getTargetLeaf() {
 			return targetLeaf;
 		}
+
+		public void setText(String text) {
+			this.text = text;
+			if(answer != null) answer.setText(text);
+			
+		}
+
+		public void setSynonyms(SynonymSet synonyms) {
+			this.synonyms = synonyms;
+		}
 		
 		
 		
@@ -69,6 +81,7 @@ public class Answer extends GraphConnection{
 	public Answer(DecisionTree decisionTree, GraphNode source, GraphNode destination, AnswerData aData) {
 		super(decisionTree, ZestStyles.CONNECTIONS_DIRECTED, source, destination);
 		this.aData = aData;
+		this.aData.answer = this;
 		this.destination = destination;
 		setText(aData.text);
 		

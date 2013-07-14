@@ -12,6 +12,8 @@ import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.w3c.dom.Element;
 
@@ -25,25 +27,14 @@ public class Question extends GraphNode implements Serializable{
 	@XmlRootElement(name="question")
 	public static class QuestionData extends JAXNode{
 		
-		@XmlAttribute private String text;
-		@XmlAttribute private String shortText;
+		@XmlAttribute private String text = "";
+		@XmlAttribute private String shortText = "";
 		@XmlAttribute private int locationX = 0;
 		@XmlAttribute private int locationY = 0;
 		
 		@XmlElement(name="answer") private List<AnswerData> answerDatas;
 		
-		
-		
-		public static QuestionData createFromElement(Element questionElement) {
-			QuestionData qData = new QuestionData(
-					questionElement.getAttribute("text"), 
-					questionElement.getAttribute("shorttext"));
-			
-//			qData.location = new Point(
-//					Integer.parseInt(questionElement.getAttribute("locationX")),
-//					Integer.parseInt(questionElement.getAttribute("locationY")));
-			return qData;
-		}
+		private Question question = null;
 		
 		public QuestionData() {};
 		
@@ -61,6 +52,32 @@ public class Question extends GraphNode implements Serializable{
 
 		public List<AnswerData> getAnswerDatas() {
 			return answerDatas;
+		}
+
+		public int getLocationX() {
+			return locationX;
+		}
+
+		public void setLocationX(int locationX) {
+			this.locationX = locationX;
+		}
+
+		public int getLocationY() {
+			return locationY;
+		}
+
+		public void setLocationY(int locationY) {
+			this.locationY = locationY;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		public void setShortText(String shortText) {
+			this.shortText = shortText;
+			if(question != null)
+				question.setText(shortText);
 		}
 		
 		
@@ -84,6 +101,7 @@ public class Question extends GraphNode implements Serializable{
 		super(decisionTree, SWT.None, qData.shortText);
 		setMyStyle();
 		this.qData = qData;
+		this.qData.question = this;
 		this.decisionTree = decisionTree;
 		this.setLocation(qData.locationX, qData.locationY);
 		
@@ -119,5 +137,7 @@ public class Question extends GraphNode implements Serializable{
 	    setBorderHighlightColor(S.SWTColor(51, 204, 204));
 	    setBorderColor(S.SWTColor(51, 204, 204));
 	}
+	
+	
 	
 }
