@@ -295,7 +295,7 @@ public class NeuralEdge implements BenchObject{
 		System.out.println("cliecked");
 	}
 
-	NeuralGraph getNg() {
+	public NeuralGraph getNg() {
 		return ng;
 	}
 

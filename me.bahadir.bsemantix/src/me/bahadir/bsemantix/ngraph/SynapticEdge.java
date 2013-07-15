@@ -8,6 +8,8 @@ import javax.vecmath.Color3f;
 
 import org.apache.jena.atlas.logging.Log;
 
+import com.hp.hpl.jena.rdf.model.Property;
+
 import me.bahadir.bsemantix.parts.TreePair;
 
 
@@ -19,14 +21,14 @@ public class SynapticEdge extends NeuralEdge {
 	private static final long serialVersionUID = 462494079989861581L;
 	protected static Logger log = Logger.getLogger(SynapticEdge.class.getSimpleName());
 	private Synapse synapse;
-	
+
 	public SynapticEdge(NeuralGraph ng, Synapse synapse) {
 		super(
 				ng.getNodeByUri(synapse.getSource().getURI()), 
 				ng.getNodeByUri(synapse.getRange().getURI()));
 		setNg(ng);
 		setName(String.format("syn:%s", synapse.getProperty().getOwlProperty().getLocalName()));
-
+		
 		this.synapse = synapse;
 	}
 
@@ -38,7 +40,15 @@ public class SynapticEdge extends NeuralEdge {
 	}
 
 	
+
 	
+
+	@Override
+	public Property getProperty() {
+	
+		return synapse.getProperty().getOwlProperty();
+	}
+
 	@Override
 	public List<TreePair> getSpecPairs() {
 		List<TreePair> pairs = new LinkedList<>();

@@ -5,7 +5,7 @@
       <children xsi:type="advanced:PerspectiveStack" xmi:id="_Atap6dToEeKb2Mvea7mUsQ" elementId="PerspectiveStack">
         <children xsi:type="advanced:Perspective" xmi:id="_Atap6tToEeKb2Mvea7mUsQ">
           <children xsi:type="basic:PartSashContainer" xmi:id="_fpQmAOkrEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.2" horizontal="true">
-            <children xsi:type="basic:PartStack" xmi:id="_XqE3AOktEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.projex" containerData="4195"/>
+            <children xsi:type="basic:PartStack" xmi:id="_XqE3AOktEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.projex" visible="false" containerData="4195"/>
             <children xsi:type="basic:PartSashContainer" xmi:id="_2CGQQOkrEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.3" containerData="15805">
               <children xsi:type="basic:PartSashContainer" xmi:id="_IgDZUOksEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partsashcontainer.4" containerData="12337" horizontal="true">
                 <children xsi:type="basic:PartStack" xmi:id="_EPI3IN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.editorStack" containerData="16256">

@@ -238,6 +238,7 @@ public class OntoAdapter {
 				Individual ind = indIt.next();
 				if(resourceMap.containsKey(ind)) continue;
 				SphereNode indNode = new SphereNode(ind.getLocalName(), S.randomVector(10), SphereNode.ResourceType.INDIVIDUAL);
+				indNode.setIndividual(ind);
 				ng.addVertex(indNode);
 				resourceMap.put(ind, indNode);
 				

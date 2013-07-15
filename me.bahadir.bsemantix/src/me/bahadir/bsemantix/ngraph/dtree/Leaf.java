@@ -42,20 +42,27 @@ public class Leaf extends GraphNode implements Serializable{
 			this.outputUri = outputUri;
 			this.text = text;
 		}
-		public static final LeafData createFromElement(Element leafElement) {
-			
-			LeafData data;
-			String uri = leafElement.getAttribute("uri");
-			
-			
-			if(uri.equals("block")) {
-				data = new LeafData();
-			} else {
-				data = new LeafData(uri, leafElement.getAttribute("text"));
-			}
-						
-			return data;
+
+		public static String getBlocktext() {
+			return blockText;
 		}
+		public LeafType getType() {
+			return type;
+		}
+		public String getOutputUri() {
+			return outputUri;
+		}
+		public String getText() {
+			return text;
+		}
+		public int getLocationX() {
+			return locationX;
+		}
+		public int getLocationY() {
+			return locationY;
+		}
+		
+		
 	}
 	
 	private LeafData lData;

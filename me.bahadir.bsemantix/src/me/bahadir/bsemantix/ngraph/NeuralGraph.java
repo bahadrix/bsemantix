@@ -17,6 +17,7 @@ import javax.vecmath.Vector3d;
 
 import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ngraph.SphereNode.ResourceType;
 import me.bahadir.bsemantix.physics.NodeForcesMap;
 import me.bahadir.bsemantix.physics.Physics;
 
@@ -26,6 +27,7 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.UndirectedSubgraph;
 
+import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 
 public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
@@ -98,12 +100,7 @@ public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 	public SphereNode getNodeByUri(String uri) {
 		
 			for(SphereNode temp : vertexSet()) {
-				OntClass cls = temp.getOntClass();
-				if(cls != null) {
-					if(cls.hasURI(uri)) {
-						return temp;
-					}
-				}
+				if(temp.getUri().equals(uri)) return temp;
 			}
 		
 		return null;

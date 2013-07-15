@@ -36,6 +36,7 @@ import me.bahadir.bsemantix.ngraph.SphereMaterials.SphereMaterial;
 import me.bahadir.bsemantix.parts.TreePair;
 import me.bahadir.bsemantix.physics.Physics;
 
+import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Text2D;
@@ -64,8 +65,9 @@ public class SphereNode implements BenchObject {
 	private List<BranchGroup> additions;
 	private BranchGroup drawingRepulsiveVector;
 	private OntClass ontClass = null;
+	private Individual individual = null;
 	private SphereMaterial sphereMaterial;
-	private ResourceType resourceType;
+	public final ResourceType resourceType;
 	private TransformGroup labelTransform;
 	
 	public SphereNode(Vector3d position) {
@@ -150,7 +152,26 @@ public class SphereNode implements BenchObject {
 		transformGroup.setUserData(this);
 	}
 
+	public String getUri() {
+		switch(resourceType) {
+		case CLASS:
+			return getOntClass().getURI();
+		case INDIVIDUAL:
+			return getIndividual().getURI();
+		default:
+			return null;
+		}
+	}
 
+	public Individual getIndividual() {
+		return individual;
+	}
+
+	
+	
+	public void setIndividual(Individual individual) {
+		this.individual = individual;
+	}
 
 	public OntClass getOntClass() {
 		return ontClass;
@@ -402,9 +423,19 @@ public class SphereNode implements BenchObject {
 		pairs.add(new TreePair("Name", getName()));
 		pairs.add(new TreePair("Position", S.Vector3dString(getPosition())));
 		pairs.add(new TreePair("Repulsive FV", S.Vector3dString(getRepulisiveForce())));
-		if(ontClass != null) {
+		
+		switch (resourceType) {
+		case CLASS:
 			pairs.add(new TreePair("URI", ontClass.getURI()));
+			break;
+		case INDIVIDUAL:
+			pairs.add(new TreePair("URI", individual.getURI()));
+			break;
+		}
+		if(ontClass != null) {
+			
 		};
+	
 		return pairs;
 	}
 

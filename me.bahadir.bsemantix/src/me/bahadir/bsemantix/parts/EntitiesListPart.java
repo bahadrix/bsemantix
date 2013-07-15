@@ -40,6 +40,7 @@ public class EntitiesListPart extends ViewPart{
 	public static final String TOPIC_SET_SELECTION = "PATHS_PART/SET_SELECTION";
 	public static final String TOPIC_OPEN_SYNAPTIC_EDGE = "PATHS_PART/OPEN_SYNAPTIC_EDGE";
 	
+	
 	private TreeViewer treeViewer;
 
 	@Inject
@@ -81,6 +82,7 @@ public class EntitiesListPart extends ViewPart{
 					pair.onDoubleClicked();
 				} else if(item instanceof SynapticEdge) {
 					partService.activate(partService.findPart("me.bahadir.bsemantix.part.DecisionEditor"));
+					S.broker.post(DecisionEditorPart.TOPIC_EDIT_SYNAPTIC_EDGE, item);
 				}
 			}
 		});

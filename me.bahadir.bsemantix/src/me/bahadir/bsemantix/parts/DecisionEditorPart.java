@@ -22,14 +22,18 @@ import me.bahadir.bsemantix.ccortex.CCortex;
 import me.bahadir.bsemantix.ccortex.CCortex.DectreeDocument;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
+import me.bahadir.bsemantix.ngraph.SynapticEdge;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree.DecisionTreeData;
+import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf;
 import me.bahadir.bsemantix.ngraph.dtree.Question;
 import me.bahadir.bsemantix.semantic.SampleOM;
 
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -37,6 +41,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.internal.win32.LRESULT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -57,6 +62,10 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class DecisionEditorPart {
 	
@@ -65,10 +74,15 @@ public class DecisionEditorPart {
 	
 	public static final String TOPIC_TREE_ITEM_SELECTED = "DT_ITEM_SELECTED";
 	public static final String TOPIC_TREE_ITEM_UNSELECTED = "DT_ITEM_UNSELECTED";
-	
+	public static final String TOPIC_EDIT_SYNAPTIC_EDGE = "DT_EDIT_SYNAPTIC_DECISION";
 	private Shell shell;
 	private DecisionTree activeTree;
 	private Menu addLeafMenu;
+
+	private ToolBar bar;
+	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+
+	private Composite parent;
 
 	private enum MouseClickType {
 		DOUBLE, RIGHT
@@ -79,16 +93,36 @@ public class DecisionEditorPart {
 		// TODO Your code here
 	}
 
+	
+	@Inject @Optional
+	void editSynapticTree(@UIEventTopic(TOPIC_EDIT_SYNAPTIC_EDGE) SynapticEdge synapticEdge) {
+		log.info("loading synaptic edge decision tree");
+		
+		DecisionTree.DecisionTreeData data = new DecisionTreeData(
+				synapticEdge.getSourceVertex().getOntClass(), 
+				synapticEdge.getProperty(),
+				synapticEdge.getTargetVertex().getOntClass());
+		DecisionTree tree = new DecisionTree(parent, synapticEdge.getNg(), data);
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));;
+		// autmatically set this to root
+		tree.addQuestion("Ask your question here..", "Question");
+		
+		
+		setActiveTree(tree);
+		
+		
+	}
+	
 	@PostConstruct
 	public void postConstruct(final Composite parent, final Shell shell) {
 		this.shell = shell;
-		GridLayout gl_parent = new GridLayout();
-		parent.setLayout(gl_parent);
+		this.parent = parent;
+		parent.setLayout(new GridLayout(1, false));
 
-		ToolBar bar = new ToolBar(parent, SWT.FLAT);
-		bar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		bar = new ToolBar(parent, SWT.FLAT);
+		bar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 
-		activeTree = sampleTree(parent);
+	
 
 		final ToolItem tbAddLeaf = new ToolItem(bar, SWT.DROP_DOWN);
 
@@ -136,7 +170,7 @@ public class DecisionEditorPart {
 
 		final ToolItem tbExportXML = new ToolItem(bar, SWT.PUSH);
 		tbExportXML.setText("Export");
-		tbExportXML.setImage(ResourceManager.getPluginImage("org.eclipse.debug.ui", "/icons/full/elcl16/export_brkpts.gif"));
+		tbExportXML.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/xml.png"));
 		tbExportXML.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -154,7 +188,7 @@ public class DecisionEditorPart {
 
 		final ToolItem tbImportXML = new ToolItem(bar, SWT.PUSH);
 		tbImportXML.setText("Import");
-		tbImportXML.setImage(ResourceManager.getPluginImage("org.eclipse.debug.ui", "/icons/full/elcl16/import_brkpts.gif"));
+		tbImportXML.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/xml.png"));
 		tbImportXML.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -170,7 +204,88 @@ public class DecisionEditorPart {
 			}
 		});
 		
+
 		
+		
+
+		
+
+		bar.pack();
+		
+		ToolItem toolItem_1 = new ToolItem(bar, SWT.SEPARATOR);
+		
+		ToolItem tbCommit = new ToolItem(bar, SWT.NONE);
+		tbCommit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				commit2CCortex();
+			}
+		});
+		tbCommit.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/commit_db.png"));
+		tbCommit.setText("Commit");
+
+
+
+	}
+
+	protected void commit2CCortex() {
+		
+		CCortex ccortex = S.getStandartCCortex();
+		
+		ccortex.store(new DectreeDocument(activeTree));
+		
+		
+		
+	}
+
+	public void onNodeMouseClick(GraphNode node, MouseClickType clickType) {
+		switch(clickType) {
+		case DOUBLE:
+			break;
+		case RIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onConnectionMouseClick(GraphConnection conn,
+			MouseClickType clickType) {
+		System.out.println(conn);
+	}
+
+	private void exportXML() {
+		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+		dialog.setFilterExtensions(new String[] { "*.xml" });
+		dialog.setOverwrite(true);
+
+		String path = dialog.open();
+		if (path == null)
+			return;
+
+		try {
+			File file = new File(path);
+			if (file.exists() && !dialog.getOverwrite()) {
+				return;
+			}
+
+			activeTree.saveXML(new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//
+
+	}
+
+	private void setActiveTree(DecisionTree decTree) {
+		reset();
+		this.activeTree = decTree;
+		activeTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		activeTree.addSelectionListener(new SelectionListener() {
 
@@ -237,79 +352,11 @@ public class DecisionEditorPart {
 				}
 			}
 		});
-
 		generateMenus(bar);
-
-		bar.pack();
-		
-		ToolItem toolItem_1 = new ToolItem(bar, SWT.SEPARATOR);
-		
-		ToolItem tbCommit = new ToolItem(bar, SWT.NONE);
-		tbCommit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				commit2CCortex();
-			}
-		});
-		tbCommit.setImage(ResourceManager.getPluginImage("org.eclipse.egit.ui", "/icons/obj16/commit.gif"));
-		tbCommit.setText("Commit");
-
+		parent.redraw();
+		//bench.pack();
 	}
-
-	protected void commit2CCortex() {
-		
-		CCortex ccortex = S.getStandartCCortex();
-		
-		ccortex.store(new DectreeDocument(activeTree));
-		
-		
-		
-	}
-
-	public void onNodeMouseClick(GraphNode node, MouseClickType clickType) {
-		switch(clickType) {
-		case DOUBLE:
-			break;
-		case RIGHT:
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void onConnectionMouseClick(GraphConnection conn,
-			MouseClickType clickType) {
-		System.out.println(conn);
-	}
-
-	private void exportXML() {
-		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-		dialog.setFilterExtensions(new String[] { "*.xml" });
-		dialog.setOverwrite(true);
-
-		String path = dialog.open();
-		if (path == null)
-			return;
-
-		try {
-			File file = new File(path);
-			if (file.exists() && !dialog.getOverwrite()) {
-				return;
-			}
-
-			activeTree.saveXML(new FileOutputStream(file));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		//
-
-	}
-
+	
 	private void importXML() {
 
 		FileDialog dialog = new FileDialog(shell);
@@ -350,7 +397,7 @@ public class DecisionEditorPart {
 	}
 
 	private void reset() {
-
+		if(activeTree == null) return;
 		activeTree.disposeChildren();
 
 		// Dispose leaf menu
@@ -380,7 +427,7 @@ public class DecisionEditorPart {
 		}
 	}
 
-	private void addLeaf(Leaf leaf) {
+	private void addLeaf(LeafData data) {
 
 		int selectSize = activeTree.getSelection().size();
 		if (selectSize < 1) {
@@ -391,8 +438,9 @@ public class DecisionEditorPart {
 		Object object = activeTree.getSelection().get(selectSize - 1);
 		if (object instanceof Question) {
 			Question source = (Question) object;
-			Leaf targetLeaf = leaf == null ? activeTree.createBlockLeaf()
-					: leaf;
+			Leaf targetLeaf = data == null 
+					? Leaf.createBlockLeaf(activeTree)
+					:  new Leaf(activeTree, data);
 
 			if (!activeTree.hasDirectedConnection(source, targetLeaf)) {
 
@@ -440,16 +488,16 @@ public class DecisionEditorPart {
 			MenuItem seperator = new MenuItem(addLeafMenu, SWT.SEPARATOR);
 
 		}
-		for (final Leaf leaf : activeTree.getOutputs().values()) {
+		for (final LeafData leafData : activeTree.getOutputs().values()) {
 			MenuItem leafItem = new MenuItem(addLeafMenu, SWT.None);
-			leafItem.setText(leaf.getText());
+			leafItem.setText(leafData.getText());
 			leafItem.setImage(S.getImage("icons/leaf.png"));
 			leafItem.addSelectionListener(new SelectionListener() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					// TODO Auto-generated method stub
-					addLeaf(leaf);
+					addLeaf(leafData);
 				}
 
 				@Override
@@ -463,50 +511,50 @@ public class DecisionEditorPart {
 	}
 
 	private DecisionTree sampleTree(Composite parent) {
-
-		OntModel om = SampleOM.getOntologyModel();
-		NeuralGraph ng = new NeuralGraph();
-
-		SphereNode sn1 = new SphereNode(S.unitVectorX);
-		sn1.setOntClass(om.getOntClass("bx:Animal"));
-		SphereNode sn2 = new SphereNode(S.unitVectorY);
-		sn2.setOntClass(om.getOntClass("bx:Bird"));
-		ng.addVertex(sn1);
-		ng.addVertex(sn2);
-
-		
-		
-		SashForm sf = new SashForm(parent, SWT.VERTICAL);
-		
-		List<String> targets = new LinkedList<>();
-		targets.add(sn2.getOntClass().getURI());
-		DecisionTree decTree = new DecisionTree(parent, ng,
-				new DecisionTreeData(sn1.getOntClass().getURI(), "http://test/tov#conna", targets));
-		decTree.setLayout(new FillLayout(SWT.HORIZONTAL));
-		decTree.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		Question qSicakMi = decTree.addQuestion("Madde sıcak mı?");
-		Question qCokMuSicak = decTree.addQuestion("Çok mu sıcak?");
-		decTree.addAnswer(qSicakMi, qCokMuSicak, new AnswerData("evet",
-				"madde sıcak"));
-		decTree.addAnswer(qSicakMi, decTree.createBlockLeaf(), new AnswerData(
-				"hayır", "madde sıcak değil"));
-
-		Question qYaniyorMu = decTree.addQuestion("Madde yanıyor mu?",
-				"Yanıyor mu?");
-
-		decTree.addAnswer(qCokMuSicak, decTree.createBlockLeaf(),
-				new AnswerData("biraz sıcak", "madde biraz sıcak"));
-		decTree.addAnswer(qCokMuSicak, qYaniyorMu, new AnswerData("evet",
-				"madde çok sıcak"));
-
-		decTree.addAnswer(qYaniyorMu, decTree.getLeaf(sn2), new AnswerData(
-				"evet", "madde yanıyor"));
-		decTree.addAnswer(qYaniyorMu, decTree.createBlockLeaf(),
-				new AnswerData("hayır", "madde sönük"));
-
-		return decTree;
-
+//
+//		OntModel om = SampleOM.getOntologyModel();
+//		NeuralGraph ng = new NeuralGraph();
+//
+//		SphereNode sn1 = new SphereNode(S.unitVectorX);
+//		sn1.setOntClass(om.getOntClass("bx:Animal"));
+//		SphereNode sn2 = new SphereNode(S.unitVectorY);
+//		sn2.setOntClass(om.getOntClass("bx:Bird"));
+//		ng.addVertex(sn1);
+//		ng.addVertex(sn2);
+//
+//		
+//		
+//		SashForm sf = new SashForm(parent, SWT.VERTICAL);
+//		
+//		List<String> targets = new LinkedList<>();
+//		targets.add(sn2.getOntClass().getURI());
+//		DecisionTree decTree = new DecisionTree(parent, ng,
+//				new DecisionTreeData(sn1.getOntClass().getURI(), "http://test/tov#conna", targets));
+//		decTree.setLayout(new FillLayout(SWT.HORIZONTAL));
+//		decTree.setLayoutData(new GridData(GridData.FILL_BOTH));
+//
+//		Question qSicakMi = decTree.addQuestion("Madde sıcak mı?");
+//		Question qCokMuSicak = decTree.addQuestion("Çok mu sıcak?");
+//		decTree.addAnswer(qSicakMi, qCokMuSicak, new AnswerData("evet",
+//				"madde sıcak"));
+//		decTree.addAnswer(qSicakMi, decTree.createBlockLeaf(), new AnswerData(
+//				"hayır", "madde sıcak değil"));
+//
+//		Question qYaniyorMu = decTree.addQuestion("Madde yanıyor mu?",
+//				"Yanıyor mu?");
+//
+//		decTree.addAnswer(qCokMuSicak, decTree.createBlockLeaf(),
+//				new AnswerData("biraz sıcak", "madde biraz sıcak"));
+//		decTree.addAnswer(qCokMuSicak, qYaniyorMu, new AnswerData("evet",
+//				"madde çok sıcak"));
+//
+//		decTree.addAnswer(qYaniyorMu, decTree.getLeaf(sn2), new AnswerData(
+//				"evet", "madde yanıyor"));
+//		decTree.addAnswer(qYaniyorMu, decTree.createBlockLeaf(),
+//				new AnswerData("hayır", "madde sönük"));
+//
+//		return decTree;
+		return null;
 	}
 
 	@Focus
