@@ -1,5 +1,9 @@
 package me.bahadir.bsemantix;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Properties;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -17,6 +21,10 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+
+		
+		
+		System.out.println("saved");
 	}
 
 	/*

@@ -2,6 +2,8 @@ package me.bahadir.bsemantix.ngraph.dtree;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,6 +24,7 @@ public class Leaf extends GraphNode implements Serializable{
 	
 	// This data saved to file for completly restore object
 	@XmlRootElement(name="leaf")
+	@XmlAccessorType(XmlAccessType.NONE)
 	public static class LeafData extends JAXNode{
 		public final static String blockText = "*";
 		@XmlAttribute(name="leaftype") public final LeafType type;
@@ -50,11 +53,7 @@ public class Leaf extends GraphNode implements Serializable{
 			} else {
 				data = new LeafData(uri, leafElement.getAttribute("text"));
 			}
-			
-//			data.location = new Point(
-//					Integer.parseInt(leafElement.getAttribute("locationX")), 
-//					Integer.parseInt(leafElement.getAttribute("locationY")));
-			
+						
 			return data;
 		}
 	}

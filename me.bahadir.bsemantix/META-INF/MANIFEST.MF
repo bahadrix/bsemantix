@@ -21,7 +21,8 @@ Bundle-ClassPath: .,
  lib/vecmath.jar,
  lib/xercesImpl-2.11.0.jar,
  lib/xml-apis-1.4.01.jar,
- swing2swt.jar
+ swing2swt.jar,
+ lib/mongo-java-driver-2.11.2.jar
 Bundle-Activator: me.bahadir.bsemantix.Activator
 Require-Bundle: javax.inject;bundle-version="1.0.0",
  org.eclipse.core.runtime;bundle-version="3.9.0",

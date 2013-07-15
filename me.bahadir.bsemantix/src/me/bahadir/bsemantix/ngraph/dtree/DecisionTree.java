@@ -59,6 +59,7 @@ public class DecisionTree extends Graph{
 	public static class DecisionTreeData extends JAXNode {
 		
 		@XmlAttribute private String sourceUri;
+		@XmlElement private String predicateUri;
 		
 		@XmlElementWrapper(name="leafuris")
 		@XmlElement(name="leafuri")	private List<String> leafUris;
@@ -66,13 +67,33 @@ public class DecisionTree extends Graph{
 		
 		@XmlElement(name="question") private QuestionData rootQuestionData;
 		
+		
 		public DecisionTreeData() {};
 		
-		public DecisionTreeData(String sourceUri, List<String> leafUris) {
+		public DecisionTreeData(String sourceUri, String predicateUri, List<String> leafUris) {
 			this.sourceUri = sourceUri;
 			this.leafUris = leafUris;
+			this.predicateUri = predicateUri;
 	
 		}
+
+		public String getSourceUri() {
+			return sourceUri;
+		}
+
+		public List<String> getLeafUris() {
+			return leafUris;
+		}
+
+		public QuestionData getRootQuestionData() {
+			return rootQuestionData;
+		}
+
+		public String getPredicateUri() {
+			return predicateUri;
+		}
+		
+		
 		
 	}
 	

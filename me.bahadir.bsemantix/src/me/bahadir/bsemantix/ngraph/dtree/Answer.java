@@ -1,6 +1,11 @@
 package me.bahadir.bsemantix.ngraph.dtree;
 
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -16,12 +21,13 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 public class Answer extends GraphConnection{
 
 	@XmlRootElement(name="answer")
+	@XmlAccessorType(XmlAccessType.NONE)
 	public static class AnswerData extends JAXNode{
 		@XmlAttribute private String text = ""; // evet
 		@XmlAttribute private String fact = ""; // Madde sýcak
 	 
 		@XmlElementWrapper(name="synonyms")
-		@XmlElement(name="synonym")	public SynonymSet synonyms;
+		@XmlElement(name="synonym")	public List<String> synonyms;
 
 		@XmlElement(name="question") private QuestionData targetQuestion = null;
 		@XmlElement(name="leaf") private LeafData targetLeaf = null;
@@ -30,11 +36,13 @@ public class Answer extends GraphConnection{
 		
 		public AnswerData() {};
 	
+		
+		
 		public AnswerData(String text, String fact) {
-			this(text,fact,new SynonymSet());
+			this(text,fact,new LinkedList<String>());
 		}
 
-		public AnswerData(String text, String fact, SynonymSet synonyms) {
+		public AnswerData(String text, String fact, List<String>  synonyms) {
 			this.text = text;
 			this.fact = fact;
 			this.synonyms = synonyms;
@@ -48,7 +56,8 @@ public class Answer extends GraphConnection{
 			return fact;
 		}
 
-		public SynonymSet getSynonyms() {
+		public List<String> getSynonyms() {
+			System.out.println("synget");
 			return synonyms;
 		}
 
@@ -66,7 +75,8 @@ public class Answer extends GraphConnection{
 			
 		}
 
-		public void setSynonyms(SynonymSet synonyms) {
+		public void setSynonyms(List<String> synonyms) {
+			System.out.println("synset");
 			this.synonyms = synonyms;
 		}
 		

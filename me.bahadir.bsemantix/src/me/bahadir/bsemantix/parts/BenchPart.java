@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.eclipse.wb.swt.ResourceManager;
 
 public class BenchPart extends PartBase { 
 	protected static Logger log = Logger.getLogger(BenchPart.class.getSimpleName());

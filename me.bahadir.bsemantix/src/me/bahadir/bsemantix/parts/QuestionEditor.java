@@ -33,7 +33,13 @@ public class QuestionEditor extends Composite {
 		super(parent, SWT.NONE);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite composite = formToolkit.createComposite(this, SWT.NONE);
+		Section sctnNewSection = formToolkit.createSection(this, Section.TITLE_BAR);
+		formToolkit.paintBordersFor(sctnNewSection);
+		sctnNewSection.setText("Question Properties");
+		sctnNewSection.setExpanded(true);
+		
+		Composite composite = formToolkit.createComposite(sctnNewSection, SWT.NONE);
+		sctnNewSection.setClient(composite);
 		formToolkit.paintBordersFor(composite);
 		composite.setLayout(new GridLayout(3, false));
 		new Label(composite, SWT.NONE);
@@ -51,7 +57,7 @@ public class QuestionEditor extends Composite {
 		txtShortText = formToolkit.createText(composite, "New Text", SWT.NONE);
 		txtShortText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		m_bindingContext = initDataBindings();
-
+		
 	}
 
 	

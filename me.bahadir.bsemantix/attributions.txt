@@ -19,3 +19,7 @@ attributions:
 5.	icon: xml.png
 	http://www.iconfinder.com/icondetails/131655/16/xml_icon
 	Designer: Aha-Soft - http://www.aha-soft.com/	
+
+6.	icon: grid.png
+	http://www.iconfinder.com/icondetails/126570/24/grid_small_icon
+	Designer: Timothy Miller

@@ -12,7 +12,7 @@
                   <children xsi:type="basic:InputPart" xmi:id="_fCP1MOe-EeKl0ueTYh8_5Q" elementId="me.bahadir.bsemantix.inputpart.editor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EditorPart" label="OWL Editor">
                     <properties key="codeText"/>
                   </children>
-                  <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.bench" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="3D Workbench"/>
+                  <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.bench" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="Neocortex"/>
                   <children xsi:type="basic:Part" xmi:id="_KoZAMOlrEeKjSZnzUfh6eg" elementId="me.bahadir.bsemantix.part.DecisionEditor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DecisionEditorPart" label="Decision Editor"/>
                 </children>
                 <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.rightstack" containerData="3744">
@@ -67,6 +67,7 @@
     <children xmi:id="_AtaC0dToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_AtaC0tToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
+  <descriptors xmi:id="_fX2E8O1UEeKnd-tYwy-kpQ" elementId="me.bahadir.bsemantix.part.DecisionEditor" label="Decision Editor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DecisionEditorPart"/>
   <commands xmi:id="_AtaC09ToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
   <commands xmi:id="_AtaC19ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.open" commandName="openCommand"/>
   <commands xmi:id="_AtaC2tToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>

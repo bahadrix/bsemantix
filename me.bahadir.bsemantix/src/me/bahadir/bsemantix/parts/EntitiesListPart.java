@@ -8,26 +8,33 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.annotation.PostConstruct;
 
+import me.bahadir.bsemantix.Activator;
 import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SynapticEdge;
+import me.bahadir.bsemantix.ngraph.dtree.Answer;
 
 import org.apache.jena.atlas.logging.Log;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IPartService;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
+import org.eclipse.ui.part.ViewPart;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.jgrapht.GraphPath;
 
-public class EntitiesListPart {
+public class EntitiesListPart extends ViewPart{
 	protected static Logger log = Logger.getLogger(EntitiesListPart.class.getSimpleName());
 	public static final String TOPIC_SET_GRAPH = "PATHS_PART/SET_PATH";
 	public static final String TOPIC_SET_SELECTION = "PATHS_PART/SET_SELECTION";
@@ -54,7 +61,8 @@ public class EntitiesListPart {
 	}
 	
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, final EPartService partService) {
+		
 		
 
 		
@@ -71,6 +79,8 @@ public class EntitiesListPart {
 				if(item instanceof TreePair) {
 					TreePair pair = (TreePair) item;
 					pair.onDoubleClicked();
+				} else if(item instanceof SynapticEdge) {
+					partService.activate(partService.findPart("me.bahadir.bsemantix.part.DecisionEditor"));
 				}
 			}
 		});
@@ -102,6 +112,18 @@ public class EntitiesListPart {
 	@Focus
 	public void onFocus() {
 		//TODO Your code here
+	}
+
+	@Override
+	public void createPartControl(Composite parent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFocus() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

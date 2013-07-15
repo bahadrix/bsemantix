@@ -16,7 +16,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 
+import me.bahadir.bsemantix.ProConfig;
 import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ccortex.CCortex;
+import me.bahadir.bsemantix.ccortex.CCortex.DectreeDocument;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
@@ -40,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -47,6 +51,12 @@ import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
 import com.hp.hpl.jena.ontology.OntModel;
+
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.SelectionAdapter;
 
 public class DecisionEditorPart {
 	
@@ -72,16 +82,18 @@ public class DecisionEditorPart {
 	@PostConstruct
 	public void postConstruct(final Composite parent, final Shell shell) {
 		this.shell = shell;
-		parent.setLayout(new GridLayout());
+		GridLayout gl_parent = new GridLayout();
+		parent.setLayout(gl_parent);
 
 		ToolBar bar = new ToolBar(parent, SWT.FLAT);
+		bar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
 		activeTree = sampleTree(parent);
 
 		final ToolItem tbAddLeaf = new ToolItem(bar, SWT.DROP_DOWN);
 
 		tbAddLeaf.setText("Add Leaf");
-		tbAddLeaf.setImage(S.getImage("icons/leaf-plus.png"));
+		tbAddLeaf.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/leaf.png"));
 		tbAddLeaf.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -104,7 +116,7 @@ public class DecisionEditorPart {
 
 		final ToolItem tbAddQuestionNode = new ToolItem(bar, SWT.PUSH);
 		tbAddQuestionNode.setText("Add Question");
-		tbAddQuestionNode.setImage(S.getImage("icons/question.png"));
+		tbAddQuestionNode.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/question.png"));
 		tbAddQuestionNode.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -119,10 +131,12 @@ public class DecisionEditorPart {
 
 			}
 		});
+		
+		ToolItem toolItem = new ToolItem(bar, SWT.SEPARATOR);
 
 		final ToolItem tbExportXML = new ToolItem(bar, SWT.PUSH);
 		tbExportXML.setText("Export");
-		tbExportXML.setImage(S.getImage("icons/xml.png"));
+		tbExportXML.setImage(ResourceManager.getPluginImage("org.eclipse.debug.ui", "/icons/full/elcl16/export_brkpts.gif"));
 		tbExportXML.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -140,7 +154,7 @@ public class DecisionEditorPart {
 
 		final ToolItem tbImportXML = new ToolItem(bar, SWT.PUSH);
 		tbImportXML.setText("Import");
-		tbImportXML.setImage(S.getImage("icons/xml.png"));
+		tbImportXML.setImage(ResourceManager.getPluginImage("org.eclipse.debug.ui", "/icons/full/elcl16/import_brkpts.gif"));
 		tbImportXML.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -227,7 +241,29 @@ public class DecisionEditorPart {
 		generateMenus(bar);
 
 		bar.pack();
+		
+		ToolItem toolItem_1 = new ToolItem(bar, SWT.SEPARATOR);
+		
+		ToolItem tbCommit = new ToolItem(bar, SWT.NONE);
+		tbCommit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				commit2CCortex();
+			}
+		});
+		tbCommit.setImage(ResourceManager.getPluginImage("org.eclipse.egit.ui", "/icons/obj16/commit.gif"));
+		tbCommit.setText("Commit");
 
+	}
+
+	protected void commit2CCortex() {
+		
+		CCortex ccortex = S.getStandartCCortex();
+		
+		ccortex.store(new DectreeDocument(activeTree));
+		
+		
+		
 	}
 
 	public void onNodeMouseClick(GraphNode node, MouseClickType clickType) {
@@ -438,10 +474,15 @@ public class DecisionEditorPart {
 		ng.addVertex(sn1);
 		ng.addVertex(sn2);
 
+		
+		
+		SashForm sf = new SashForm(parent, SWT.VERTICAL);
+		
 		List<String> targets = new LinkedList<>();
 		targets.add(sn2.getOntClass().getURI());
 		DecisionTree decTree = new DecisionTree(parent, ng,
-				new DecisionTreeData(sn1.getOntClass().getURI(), targets));
+				new DecisionTreeData(sn1.getOntClass().getURI(), "http://test/tov#conna", targets));
+		decTree.setLayout(new FillLayout(SWT.HORIZONTAL));
 		decTree.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Question qSicakMi = decTree.addQuestion("Madde sıcak mı?");
@@ -472,5 +513,4 @@ public class DecisionEditorPart {
 	public void onFocus() {
 		// TODO Your code here
 	}
-
 }

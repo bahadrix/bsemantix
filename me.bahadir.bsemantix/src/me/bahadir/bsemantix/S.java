@@ -2,6 +2,8 @@ package me.bahadir.bsemantix;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -11,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 import javax.media.j3d.BoundingSphere;
@@ -22,6 +25,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
+import me.bahadir.bsemantix.ccortex.CCortex;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
@@ -78,11 +82,14 @@ public class S {
 	public static IEventBroker broker;
 	public static MApplication application;
 
+
 	public static String xmlize(String s) {
 		return s.replace("<", "").replace(">", "");
 	}
 	
-	
+	public static CCortex getStandartCCortex() {
+		return CCortex.getInstance(ProConfig.get(ProConfig.MONGODB_HOST), ProConfig.get(ProConfig.MONGODB_PORT));
+	}
 	public static Element getFirstElementOfTag(Element e, String...tagNames) {
 		
 		

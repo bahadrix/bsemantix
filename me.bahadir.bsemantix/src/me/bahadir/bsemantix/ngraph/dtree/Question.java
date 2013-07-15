@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,6 +27,7 @@ public class Question extends GraphNode implements Serializable{
 	private static final long serialVersionUID = -7522215234845313353L;
 	
 	@XmlRootElement(name="question")
+	@XmlAccessorType(XmlAccessType.NONE)
 	public static class QuestionData extends JAXNode{
 		
 		@XmlAttribute private String text = "";
