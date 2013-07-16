@@ -285,7 +285,8 @@ public class DecisionEditorPart {
 	}
 
 	private void setActiveTree(DecisionTree decTree) {
-		reset();
+		//reset();
+		if(activeTree != null) activeTree.dispose();
 		this.activeTree = decTree;
 		activeTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
