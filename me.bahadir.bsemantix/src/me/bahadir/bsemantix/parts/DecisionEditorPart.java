@@ -42,9 +42,11 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.internal.win32.LRESULT;
+import org.eclipse.swt.internal.win32.TCHAR;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -353,7 +355,8 @@ public class DecisionEditorPart {
 			}
 		});
 		generateMenus(bar);
-		parent.redraw();
+		
+		parent.layout(true, true);
 		//bench.pack();
 	}
 	
@@ -438,9 +441,20 @@ public class DecisionEditorPart {
 		Object object = activeTree.getSelection().get(selectSize - 1);
 		if (object instanceof Question) {
 			Question source = (Question) object;
-			Leaf targetLeaf = data == null 
-					? Leaf.createBlockLeaf(activeTree)
-					:  new Leaf(activeTree, data);
+			Leaf targetLeaf;
+			if(data == null) {
+				targetLeaf = Leaf.createBlockLeaf(activeTree);
+			} else {
+				log.info(data.getOutputUri());
+				if(source.getAnswerDataByTargetURI(data.getOutputUri()) == null) {
+					targetLeaf =  new Leaf(activeTree, data);
+				} else {
+					log.warning("This question already have answer for that leaf node. Consider using synoynms.");
+					return;
+				}
+			}
+			
+			 
 
 			if (!activeTree.hasDirectedConnection(source, targetLeaf)) {
 

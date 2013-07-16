@@ -46,9 +46,12 @@ public class Question extends GraphNode implements Serializable{
 			this.text = text; 
 			this.shortText = shortText;
 		}
+		
 		public final String getText() {
 			return text;
 		}
+	
+		
 		public final String getShortText() {
 			return  shortText;
 		}
@@ -141,6 +144,15 @@ public class Question extends GraphNode implements Serializable{
 	    setBorderColor(S.SWTColor(51, 204, 204));
 	}
 	
+	public AnswerData getAnswerDataByTargetURI(String uri) {
+		
+		for(AnswerData temp : getQuestionData(true).answerDatas) {
+			System.out.println("\t\t" + temp.getTargetLeaf().getOutputUri());
+			if(temp.getTargetLeaf().getOutputUri().equals(uri)) return temp;
+		}
+		
+		return null;
+	}
 	
 	
 }
