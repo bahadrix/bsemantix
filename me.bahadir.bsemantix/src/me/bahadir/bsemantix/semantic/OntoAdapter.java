@@ -34,7 +34,7 @@ public class OntoAdapter {
 	public OntoAdapter(OntModel model) {
 
 		SETTINGS |= LOAD_INDIVIDUALS;
-
+		log.info("Ontology adapter settings bitmask: " + Integer.toBinaryString(SETTINGS));
 		loadModel(model);
 	}
 
@@ -44,16 +44,15 @@ public class OntoAdapter {
 
 	}
 
-
+	
 
 	public NeuralGraph createNeuralGraph() {
 
 		NeuralGraph ng = new NeuralGraph();
 
 
+		log.info("Adding classes..");
 		ExtendedIterator<OntClass> itClass;
-
-		// add classes
 		itClass = model.listClasses();
 		while (itClass.hasNext()) {
 
@@ -68,8 +67,9 @@ public class OntoAdapter {
 			
 		}
 
-		//add individual nodes
+		
 		if(S.bitTest(SETTINGS, LOAD_INDIVIDUALS)) {
+			log.info("Adding individuals..");
 			ExtendedIterator<Individual> inds = model.listIndividuals();
 			
 			while(inds.hasNext()) {
@@ -78,7 +78,8 @@ public class OntoAdapter {
 			}
 		}
 		
-		// CONNECTING NODES
+		
+		log.info("Connecting nodes..");
 		for (SphereNode source : ng.vertexSet()) {
 
 			if (source.resourceType == ResourceType.CLASS) {
