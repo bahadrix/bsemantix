@@ -98,11 +98,11 @@ public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 	}
 	
 	public SphereNode getNodeByUri(String uri) {
-		
+		if(uri != null)  {
 			for(SphereNode temp : vertexSet()) {
 				if(temp.getUri().equals(uri)) return temp;
 			}
-		
+		}
 		return null;
 	}
 	

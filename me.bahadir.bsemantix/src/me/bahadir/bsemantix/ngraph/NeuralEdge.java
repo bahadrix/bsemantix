@@ -78,11 +78,14 @@ public class NeuralEdge implements BenchObject{
 		
 		this.bLine = new BranchGroup();
 		bLine.setCapability(BranchGroup.ALLOW_DETACH);
+		init();
 		drawLine();
 		
 		
 	}
 
+	protected void init() {};
+	
 	
 	public void step() {
 	

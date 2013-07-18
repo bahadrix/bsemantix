@@ -188,27 +188,26 @@ public class BenchPart extends PartBase {
 
 		// burasý 3-4 kere çaðýrýlýyo mok varmýþ gibi
 		
-		
-		MPart p = service.findPart("me.bahadir.bsemantix.inputpart.editor");
+		try {
+			MPart p = service.findPart("me.bahadir.bsemantix.inputpart.editor");
 
-		StyledText text = (StyledText) p.getContext().get("txtOntology");
-		String code = text.getText();
-		
-		
-		if(!code.equals(ontoText)) {
-			ontoText = code;
-			log.info("Loading code..");
-			
-			StringReader sr = new StringReader(code);
-			OntModel model = ModelFactory.createOntologyModel();
-			model.read(sr, null);
-			
-			nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
-			
+			StyledText text = (StyledText) p.getContext().get("txtOntology");
+			String code = text.getText();
+
+			if (!code.equals(ontoText)) {
+				ontoText = code;
+				log.info("Loading code..");
+
+				StringReader sr = new StringReader(code);
+				OntModel model = ModelFactory.createOntologyModel();
+				model.read(sr, null);
+
+				nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
+
+			}
+		} catch (NullPointerException e) {
+			System.out.println("ne");
 		}
-			
-		
-		
 		
 	}
 

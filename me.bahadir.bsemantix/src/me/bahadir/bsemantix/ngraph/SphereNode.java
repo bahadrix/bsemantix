@@ -70,15 +70,19 @@ public class SphereNode implements BenchObject {
 	public final ResourceType resourceType;
 	private TransformGroup labelTransform;
 	
-	public SphereNode(Vector3d position) {
-		this(null, position);
-	}
 
-	public SphereNode(String name, Vector3d position) {
+	public SphereNode(String name, Vector3d position, OntClass cls) {
 		this(name, position, ResourceType.CLASS);
+		setOntClass(cls);
+		
+	}
+	public SphereNode(String name, Vector3d position, Individual ind) {
+		this(name, position, ResourceType.INDIVIDUAL);
+		setIndividual(ind);
+		
 	}
 	
-	public SphereNode(String name, Vector3d position, ResourceType type) {
+	private SphereNode(String name, Vector3d position, ResourceType type) {
 		this.additions = new LinkedList<>();
 		this.position = position;
 		this.resourceType = type;

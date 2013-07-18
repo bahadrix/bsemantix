@@ -146,33 +146,6 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		ViewingPlatform platform = universe.getViewingPlatform();
 
 
-
-		
-		
-//		ng = new NeuralGraph() {
-//			private static final long serialVersionUID = 6887255869424217060L;
-//
-//			@Override
-//			public void setOrbitOrigin(Tuple3d tuple) {
-//				NeuralBench.this.setOrbitOrigin(tuple);
-//				super.setOrbitOrigin(tuple);
-//			}
-//		};
-//
-//		SphereNode s0 = new SphereNode("root", new Vector3d(0,0,0));
-//		SphereNode s1 = new SphereNode("sag", new Vector3d(1,1,1));
-//		ng.addVertex(s0);
-//		ng.addVertex(s1);
-//		ng.addEdge(new NeuralEdge(s0, s1));
-
-		// fafavafva
-
-
-
-		// avafvafvafv
-
-		// @sphere
-
 		Transform3D tr3D = new Transform3D();
 		tr3D.rotX(Math.PI / 4.0f);
 		tr3D.rotY(Math.PI / 4.0f);
@@ -292,7 +265,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		
 		OntoAdapter ontoAdapter = new OntoAdapter(model);
 		
-		ng = ontoAdapter.createNeuralGraph(nsPrefix);
+		ng = ontoAdapter.createNeuralGraph();
 		ng.setCanvas3D(canvas3D);
 		ng.setOriginSetListener(new NeuralGraph.OriginSetListener() {
 

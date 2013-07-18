@@ -11,83 +11,36 @@ import org.apache.jena.atlas.logging.Log;
 import com.hp.hpl.jena.rdf.model.Property;
 
 import me.bahadir.bsemantix.parts.TreePair;
+import me.bahadir.bsemantix.semantic.SynapticProperty;
 
 
 
-public class SynapticEdge extends NeuralEdge {
+public class SynapticEdge extends RestrictedEdge {
+
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 462494079989861581L;
 	protected static Logger log = Logger.getLogger(SynapticEdge.class.getSimpleName());
-	private Synapse synapse;
 
-	public SynapticEdge(NeuralGraph ng, Synapse synapse) {
-		super(
-				ng.getNodeByUri(synapse.getSource().getURI()), 
-				ng.getNodeByUri(synapse.getRange().getURI()));
-		setNg(ng);
-		setName(String.format("syn:%s", synapse.getProperty().getOwlProperty().getLocalName()));
-		
-		this.synapse = synapse;
+	
+	public SynapticEdge(NeuralGraph ng, Restrict rest) {
+		super(ng, rest);
+		// TODO Auto-generated constructor stub
 	}
 
+	
+
 	@Override
-	protected void drawLine() {
+	protected void init() {
 		this.pyramidColor = new Color3f(.8f,0f,.45f);
 		this.lineColor = new Color3f(.8f,0f,.45f);
-		super.drawLine();
+
 	}
 
-	
 
 	
-
-	@Override
-	public Property getProperty() {
-	
-		return synapse.getProperty().getOwlProperty();
-	}
-
-	@Override
-	public List<TreePair> getSpecPairs() {
-		List<TreePair> pairs = new LinkedList<>();
-		
-		pairs.add(new TreePair("Property URI", synapse.getProperty().getOwlProperty().getURI()));
-		
-		//Cardinality Label
-		
-		String cardinalityLabel = "Cardinality";
-		String exactCardLabel = synapse.getExactCardinality() == Synapse.STAR_CARDINAL ? "*" : String.valueOf(synapse.getExactCardinality());
-		String minCardLabel = synapse.getMinCardinality() == Synapse.STAR_CARDINAL ? "*" : String.valueOf(synapse.getMinCardinality());
-		String maxCardLabel = synapse.getMaxCardinality() == Synapse.STAR_CARDINAL ? "*" : String.valueOf(synapse.getMaxCardinality());
-		
-		if(synapse.getExactCardinality() != Synapse.STAR_CARDINAL) {
-			cardinalityLabel += String.format(" (exact %d)", synapse.getExactCardinality());
-		} else {
-			cardinalityLabel += String.format(" (%s..%s)", minCardLabel, maxCardLabel);
-		}
-		
-		pairs.add(new TreePair(cardinalityLabel, new TreePair[] {
-				new TreePair("Min",minCardLabel),
-				new TreePair("Max",maxCardLabel),
-				new TreePair("Exact",exactCardLabel)
-				
-		}));
-		
-		pairs.add(new TreePair("Decision Model","<none>"){
-
-			@Override
-			public void onDoubleClicked() {
-				log.info("lets rock some decision");
-				super.onDoubleClicked();
-			}
-			
-		});
-		
-		pairs.addAll(super.getSpecPairs());
-		return pairs;
-	}
 	
 	
 

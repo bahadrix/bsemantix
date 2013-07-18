@@ -82,7 +82,7 @@ public class S {
 	public static IEventBroker broker;
 	public static MApplication application;
 
-
+	
 	public static String xmlize(String s) {
 		return s.replace("<", "").replace(">", "");
 	}
