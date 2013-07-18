@@ -3,18 +3,8 @@ package me.bahadir.bsemantix.parts;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import me.bahadir.bsemantix.S;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.ProgressProvider;
-import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.SubStatusLineManager;

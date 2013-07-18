@@ -1,16 +1,11 @@
 package me.bahadir.bsemantix.ngraph.dtree;
 
-import java.io.File;
 import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
-import javax.xml.transform.dom.DOMResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 
 

@@ -6,21 +6,16 @@ import java.awt.Frame;
 import java.awt.GraphicsConfigTemplate;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.media.j3d.AmbientLight;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
@@ -44,37 +39,21 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
-import me.bahadir.bsemantix.geometry.Pyramid;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
 import me.bahadir.bsemantix.ngraph.SphereNode;
-import me.bahadir.bsemantix.ngraph.SubGraphSet;
-import me.bahadir.bsemantix.parts.BenchPart;
 import me.bahadir.bsemantix.parts.EntitiesListPart;
 import me.bahadir.bsemantix.physics.NodeForcesMap;
-import me.bahadir.bsemantix.physics.Physics;
 import me.bahadir.bsemantix.semantic.OntoAdapter;
-import me.bahadir.bsemantix.semantic.SampleOM;
 
-import org.apache.jena.riot.Lang;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.ProgressProvider;
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.jgrapht.GraphPath;
-import org.jgrapht.graph.UndirectedSubgraph;
-import org.osgi.framework.BundleContext;
 
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.image.TextureLoader;
@@ -275,16 +254,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 
 			}
 		});
-		SubGraphSet sgSet = ng.getSubGraphs();
-		for (UndirectedSubgraph<SphereNode, NeuralEdge> sg : sgSet.values()) {
 
-			String s = "";
-
-			for (SphereNode sp : sg.vertexSet()) {
-				s += sp.getName() + "\r\n";
-			}
-
-		}
 		ng.render(neuralRoot);
 	}
 

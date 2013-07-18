@@ -1,8 +1,5 @@
 package me.bahadir.bsemantix.parts;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
@@ -33,7 +30,7 @@ public class SelectionContentProvider implements ITreeContentProvider {
 
 	}
 
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// TODO Auto-generated method stub

@@ -1,17 +1,8 @@
 package me.bahadir.bsemantix.ngraph;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.vecmath.Color3f;
-
-import org.apache.jena.atlas.logging.Log;
-
-import com.hp.hpl.jena.rdf.model.Property;
-
-import me.bahadir.bsemantix.parts.TreePair;
-import me.bahadir.bsemantix.semantic.SynapticProperty;
 
 
 

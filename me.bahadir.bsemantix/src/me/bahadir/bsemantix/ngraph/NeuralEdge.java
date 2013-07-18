@@ -17,10 +17,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import me.bahadir.bsemantix.geometry.AxisLines;
 import me.bahadir.bsemantix.geometry.Pyramid;
-
-
 import me.bahadir.bsemantix.parts.TreePair;
 
 import com.hp.hpl.jena.rdf.model.Property;
@@ -40,7 +37,6 @@ public class NeuralEdge implements BenchObject{
 	private Appearance appearance;
 	private TransformGroup transformGroup;
 
-	private TransparencyAttributes transAttr;
 	private LineArray lineArr;
 	private String name = "?";
 	private Property property;

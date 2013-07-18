@@ -14,10 +14,7 @@ import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.zest.core.widgets.GraphNode;
-import org.w3c.dom.Element;
 
 public class Question extends GraphNode implements Serializable{
 

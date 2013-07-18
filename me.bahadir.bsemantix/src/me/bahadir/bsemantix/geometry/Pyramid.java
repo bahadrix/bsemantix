@@ -1,7 +1,5 @@
 package me.bahadir.bsemantix.geometry;
 
-import java.awt.Color;
-
 import javax.media.j3d.Appearance;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.Material;
@@ -17,15 +15,12 @@ import javax.vecmath.Point3d;
 
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
-import me.bahadir.bsemantix.ngraph.SphereNode;
 
-import com.hp.hpl.jena.sparql.function.library.print;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 
 public class Pyramid {
 
-	private Shape3D shape;
 	private GeometryArray geometry;
 	private Color3f color;
 	private Appearance appearance;

@@ -1,10 +1,6 @@
 package me.bahadir.bsemantix.semantic;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Logger;
-
-import org.apache.jena.atlas.lib.NotImplemented;
 
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
@@ -15,20 +11,14 @@ import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SphereNode.ResourceType;
 import me.bahadir.bsemantix.ngraph.SynapticEdge;
 
-import com.hp.hpl.jena.ontology.AllValuesFromRestriction;
-import com.hp.hpl.jena.ontology.ConversionException;
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.ontology.Restriction;
-import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
-import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.shared.InvalidPropertyURIException;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OntoAdapter {

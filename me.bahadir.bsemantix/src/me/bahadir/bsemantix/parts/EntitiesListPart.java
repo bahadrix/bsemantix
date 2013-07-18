@@ -1,37 +1,29 @@
  
 package me.bahadir.bsemantix.parts;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import me.bahadir.bsemantix.Activator;
-import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SynapticEdge;
-import me.bahadir.bsemantix.ngraph.dtree.Answer;
 
-import org.apache.jena.atlas.logging.Log;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IPartService;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
 import org.jgrapht.GraphPath;
 
 public class EntitiesListPart extends ViewPart{
@@ -88,9 +80,7 @@ public class EntitiesListPart extends ViewPart{
 		});
 	}
 	
-	private void synapticEdgeOpened(SynapticEdge se) {
-		log.info(se.getName() +" doubled");
-	}
+
 	
 	@Inject @Optional
 	public void setPath(@UIEventTopic(TOPIC_SET_GRAPH) GraphPath<SphereNode, NeuralEdge> graphpath) {

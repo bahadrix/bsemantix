@@ -1,9 +1,5 @@
 package me.bahadir.bsemantix;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Properties;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 

@@ -4,30 +4,18 @@ import java.awt.Font;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import javax.media.j3d.Alpha;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.Group;
 import javax.media.j3d.LineArray;
-import javax.media.j3d.LineAttributes;
-import javax.media.j3d.Material;
-import javax.media.j3d.Node;
-import javax.media.j3d.PositionInterpolator;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.TransparencyAttributes;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
-
-import org.apache.jena.atlas.logging.Log;
 
 import me.bahadir.bsemantix.Appearances;
 import me.bahadir.bsemantix.Console;
@@ -63,7 +51,6 @@ public class SphereNode implements BenchObject {
 	private Sphere sphere;
 	private Sphere focusSphere;
 	private List<BranchGroup> additions;
-	private BranchGroup drawingRepulsiveVector;
 	private OntClass ontClass = null;
 	private Individual individual = null;
 	private SphereMaterial sphereMaterial;

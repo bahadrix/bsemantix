@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -16,20 +14,16 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 
-import me.bahadir.bsemantix.ProConfig;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ccortex.CCortex;
 import me.bahadir.bsemantix.ccortex.CCortex.DectreeDocument;
-import me.bahadir.bsemantix.ngraph.NeuralGraph;
-import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SynapticEdge;
 import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree.DecisionTreeData;
-import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf;
+import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
 import me.bahadir.bsemantix.ngraph.dtree.Question;
-import me.bahadir.bsemantix.semantic.SampleOM;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
@@ -37,37 +31,23 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.internal.win32.LRESULT;
-import org.eclipse.swt.internal.win32.TCHAR;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
-
-import com.hp.hpl.jena.ontology.OntModel;
-
-import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class DecisionEditorPart {
 	
@@ -82,8 +62,6 @@ public class DecisionEditorPart {
 	private Menu addLeafMenu;
 
 	private ToolBar bar;
-	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-
 	private Composite parent;
 
 	private enum MouseClickType {
@@ -115,6 +93,7 @@ public class DecisionEditorPart {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	@PostConstruct
 	public void postConstruct(final Composite parent, final Shell shell) {
 		this.shell = shell;
@@ -213,7 +192,7 @@ public class DecisionEditorPart {
 		
 
 		bar.pack();
-		
+
 		ToolItem toolItem_1 = new ToolItem(bar, SWT.SEPARATOR);
 		
 		ToolItem tbCommit = new ToolItem(bar, SWT.NONE);
@@ -275,7 +254,7 @@ public class DecisionEditorPart {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("hiding") IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -478,6 +457,7 @@ public class DecisionEditorPart {
 		activeTree.applyLayout();
 	}
 
+	@SuppressWarnings("unused")
 	private void generateMenus(ToolBar bar) {
 		addLeafMenu = new Menu(bar);
 
@@ -525,52 +505,6 @@ public class DecisionEditorPart {
 
 	}
 
-	private DecisionTree sampleTree(Composite parent) {
-//
-//		OntModel om = SampleOM.getOntologyModel();
-//		NeuralGraph ng = new NeuralGraph();
-//
-//		SphereNode sn1 = new SphereNode(S.unitVectorX);
-//		sn1.setOntClass(om.getOntClass("bx:Animal"));
-//		SphereNode sn2 = new SphereNode(S.unitVectorY);
-//		sn2.setOntClass(om.getOntClass("bx:Bird"));
-//		ng.addVertex(sn1);
-//		ng.addVertex(sn2);
-//
-//		
-//		
-//		SashForm sf = new SashForm(parent, SWT.VERTICAL);
-//		
-//		List<String> targets = new LinkedList<>();
-//		targets.add(sn2.getOntClass().getURI());
-//		DecisionTree decTree = new DecisionTree(parent, ng,
-//				new DecisionTreeData(sn1.getOntClass().getURI(), "http://test/tov#conna", targets));
-//		decTree.setLayout(new FillLayout(SWT.HORIZONTAL));
-//		decTree.setLayoutData(new GridData(GridData.FILL_BOTH));
-//
-//		Question qSicakMi = decTree.addQuestion("Madde sıcak mı?");
-//		Question qCokMuSicak = decTree.addQuestion("Çok mu sıcak?");
-//		decTree.addAnswer(qSicakMi, qCokMuSicak, new AnswerData("evet",
-//				"madde sıcak"));
-//		decTree.addAnswer(qSicakMi, decTree.createBlockLeaf(), new AnswerData(
-//				"hayır", "madde sıcak değil"));
-//
-//		Question qYaniyorMu = decTree.addQuestion("Madde yanıyor mu?",
-//				"Yanıyor mu?");
-//
-//		decTree.addAnswer(qCokMuSicak, decTree.createBlockLeaf(),
-//				new AnswerData("biraz sıcak", "madde biraz sıcak"));
-//		decTree.addAnswer(qCokMuSicak, qYaniyorMu, new AnswerData("evet",
-//				"madde çok sıcak"));
-//
-//		decTree.addAnswer(qYaniyorMu, decTree.getLeaf(sn2), new AnswerData(
-//				"evet", "madde yanıyor"));
-//		decTree.addAnswer(qYaniyorMu, decTree.createBlockLeaf(),
-//				new AnswerData("hayır", "madde sönük"));
-//
-//		return decTree;
-		return null;
-	}
 
 	@Focus
 	public void onFocus() {

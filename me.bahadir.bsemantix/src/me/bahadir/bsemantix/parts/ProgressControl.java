@@ -5,7 +5,6 @@ import javax.inject.Inject;
 
 import me.bahadir.bsemantix.Console;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.ui.di.UISynchronize;

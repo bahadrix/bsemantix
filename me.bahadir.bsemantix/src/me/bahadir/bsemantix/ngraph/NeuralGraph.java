@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -17,7 +16,6 @@ import javax.vecmath.Vector3d;
 
 import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.S;
-import me.bahadir.bsemantix.ngraph.SphereNode.ResourceType;
 import me.bahadir.bsemantix.physics.NodeForcesMap;
 import me.bahadir.bsemantix.physics.Physics;
 
@@ -26,9 +24,6 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.UndirectedSubgraph;
-
-import com.hp.hpl.jena.ontology.Individual;
-import com.hp.hpl.jena.ontology.OntClass;
 
 public class NeuralGraph extends SimpleGraph<SphereNode, NeuralEdge>{
 

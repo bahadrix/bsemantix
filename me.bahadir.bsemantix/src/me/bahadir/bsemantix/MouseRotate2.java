@@ -15,7 +15,6 @@ import javax.vecmath.Vector3d;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 
 public class MouseRotate2 extends MouseBehavior {
 
@@ -150,7 +149,8 @@ public class MouseRotate2 extends MouseBehavior {
         y_factor = yFactor;
     }
 
-    public void processStimulus(Enumeration criteria) {
+    @SuppressWarnings("rawtypes")
+	public void processStimulus(Enumeration criteria) {
         WakeupCriterion wakeup;
         AWTEvent[] events;
         MouseEvent evt;

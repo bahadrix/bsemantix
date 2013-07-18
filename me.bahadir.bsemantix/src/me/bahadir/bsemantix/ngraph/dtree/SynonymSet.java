@@ -2,12 +2,6 @@ package me.bahadir.bsemantix.ngraph.dtree;
 
 import java.util.LinkedHashSet;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import me.bahadir.bsemantix.S;
-
-import com.hp.hpl.jena.sparql.util.StringUtils;
-
 
 public class SynonymSet extends LinkedHashSet<String> {
 

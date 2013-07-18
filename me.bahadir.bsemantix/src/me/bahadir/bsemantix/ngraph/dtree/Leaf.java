@@ -8,13 +8,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import me.bahadir.bsemantix.S;
-import me.bahadir.bsemantix.ngraph.SphereNode;
 
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.zest.core.widgets.GraphNode;
-import org.eclipse.zest.core.widgets.IContainer;
-import org.w3c.dom.Element;
 
 public class Leaf extends GraphNode implements Serializable{
 
