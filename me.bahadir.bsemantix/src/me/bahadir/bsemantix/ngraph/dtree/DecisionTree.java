@@ -1,12 +1,18 @@
 package me.bahadir.bsemantix.ngraph.dtree;
 
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -71,6 +77,39 @@ public class DecisionTree extends Graph{
 				leafUris.add(ind.getURI());
 			}
 			
+		}
+		
+		public static DecisionTreeData createFromXML(String xmlString) {
+			try {
+		
+				JAXBContext jaxbContext = JAXBContext
+						.newInstance(DecisionTreeData.class);
+
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
+
+					@Override
+					public boolean handleEvent(ValidationEvent event) {
+						switch (event.getSeverity()) {
+						case ValidationEvent.FATAL_ERROR:
+							log.severe("Can not read decision xml file. Please check format..");
+							return true;
+						}
+						return false;
+					}
+				});
+				
+				return (DecisionTreeData) jaxbUnmarshaller.unmarshal(new StringReader(xmlString));
+				
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		public String getObjectUri() {
+			return objectUri;
 		}
 
 		public String getSourceUri() {

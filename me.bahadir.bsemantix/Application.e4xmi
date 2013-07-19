@@ -14,6 +14,7 @@
                   </children>
                   <children xsi:type="basic:Part" xmi:id="_Ged1cN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.bench" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.BenchPart" label="Neocortex"/>
                   <children xsi:type="basic:Part" xmi:id="_KoZAMOlrEeKjSZnzUfh6eg" elementId="me.bahadir.bsemantix.part.DecisionEditor" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DecisionEditorPart" label="Decision Editor"/>
+                  <children xsi:type="basic:Part" xmi:id="_xJWc0PB3EeKDT-nwbNDwnQ" elementId="me.bahadir.bsemantix.part.simulatorPart" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.SimulatorPart" label="Simulator"/>
                 </children>
                 <children xsi:type="basic:PartStack" xmi:id="_Ao6CMN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.rightstack" containerData="3744">
                   <children xsi:type="basic:Part" xmi:id="_CnlVYN2MEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.partstack.right.path" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.EntitiesListPart" label="Entities"/>

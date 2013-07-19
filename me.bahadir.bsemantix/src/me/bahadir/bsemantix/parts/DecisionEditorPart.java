@@ -14,6 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 
+import me.bahadir.bsemantix.ProConfig;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ccortex.CCortex;
 import me.bahadir.bsemantix.ccortex.CCortex.DectreeDocument;
@@ -78,18 +79,26 @@ public class DecisionEditorPart {
 	void editSynapticTree(@UIEventTopic(TOPIC_EDIT_SYNAPTIC_EDGE) SynapticEdge synapticEdge) {
 		log.info("loading synaptic edge decision tree");
 		
-		DecisionTree.DecisionTreeData data = new DecisionTreeData(
+		DecisionTree tree =  new DecisionTree(parent, synapticEdge.getNg(), new DecisionTreeData(
 				synapticEdge.getSourceVertex().getOntClass(), 
 				synapticEdge.getProperty(),
-				synapticEdge.getTargetVertex().getOntClass());
-		DecisionTree tree = new DecisionTree(parent, synapticEdge.getNg(), data);
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));;
-		// autmatically set this to root
-		tree.addQuestion("Ask your question here..", "Question");
+				synapticEdge.getTargetVertex().getOntClass()));	
 		
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));;
 		
 		setActiveTree(tree);
 		
+		
+		CCortex cCortex =  CCortex.getInstance(ProConfig.get(ProConfig.MONGODB_HOST), ProConfig.get(ProConfig.MONGODB_PORT));
+		DecisionTreeData loadedData = cCortex.load(
+				synapticEdge.getSourceVertex().getOntClass().getURI(), 
+				synapticEdge.getProperty().getURI(), 
+				synapticEdge.getTargetVertex().getOntClass().getURI());
+		
+		if(loadedData != null) {
+			loadDecTreeData(loadedData);
+			
+		}
 		
 	}
 	
@@ -370,8 +379,7 @@ public class DecisionEditorPart {
 			});
 			DecisionTreeData dData = (DecisionTreeData) jaxbUnmarshaller
 					.unmarshal(file);
-			reset();
-			activeTree.loadData(dData);
+			loadDecTreeData(dData);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -379,6 +387,12 @@ public class DecisionEditorPart {
 
 	}
 
+	private void loadDecTreeData(DecisionTreeData data) {
+		reset();
+		activeTree.loadData(data);
+		parent.layout(true, true);
+	}
+	
 	private void reset() {
 		if(activeTree == null) return;
 		activeTree.disposeChildren();
