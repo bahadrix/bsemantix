@@ -36,8 +36,10 @@ public class Restrict implements Serializable {
 	public static Restrict createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction) {
 		try {
 			return new Restrict(ontClass, owlRestriction);
-		} catch (UnsupportedOperationException ce) {
-			System.out.println(ce.getLocalizedMessage());
+		} catch (UnsupportedOperationException ue) {
+			log.warning(ue.getLocalizedMessage());
+		} catch (ConversionException ce) {
+			log.warning(ce.getLocalizedMessage());
 		}
 		return null;
 	}
@@ -53,13 +55,15 @@ public class Restrict implements Serializable {
 		pOnClass = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#onClass");
 		pOnDataRange = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#onDataRange");
 
-		if (owlRestriction.hasProperty(pOnClass)) {
-			resolve();
+		if (owlRestriction.hasProperty(pOnDataRange)) {
+			throw new UnsupportedOperationException("Data range restrictions not implemented yet");
 		} else {
-			throw new UnsupportedOperationException("Restrictions other than class not implemented yet");
+			resolve();
 		}
 
 	}
+	
+
 
 	private void resolve() {
 
@@ -74,20 +78,17 @@ public class Restrict implements Serializable {
 
 			rangeClass = someRest.getSomeValuesFrom().as(OntClass.class);
 
-		} else if (owlRestriction.isAllValuesFromRestriction()) {
-			// CARDINALITY 0-*
+		} else if (owlRestriction.isAllValuesFromRestriction()) { // CARDINALITY
+																	// 0-*
 			setMinCardinality(0);
-			// log.info("\t\t(allFrom)");
 			AllValuesFromRestriction allRest = owlRestriction.asAllValuesFromRestriction();
 			rangeClass = allRest.getAllValuesFrom().as(OntClass.class);
 		} else {
 
-			if (owlRestriction.hasProperty(pQualifiedCard)) {
-				// CARDINALITY n
-
+			if (owlRestriction.hasProperty(pQualifiedCard)) { // CARDINALITY
+																// n
 				int cardInt = owlRestriction.getPropertyValue(pQualifiedCard).asLiteral().getInt();
 				setExactCardinality(cardInt);
-				// log.info(String.format("\t\t(exact %d)", cardInt));
 				rangeClass = owlRestriction.getPropertyValue(pOnClass).as(OntClass.class);
 			} else if (owlRestriction.hasProperty(pMinQualifiedCard)) { // CARDINALITY
 																		// n-*
