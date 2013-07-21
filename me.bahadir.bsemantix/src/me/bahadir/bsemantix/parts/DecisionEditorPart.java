@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
+import com.hp.hpl.jena.rdf.model.Property;
 
 public class DecisionEditorPart {
 	
@@ -79,15 +80,15 @@ public class DecisionEditorPart {
 	void editSynapticTree(@UIEventTopic(TOPIC_EDIT_SYNAPTIC_EDGE) SynapticEdge synapticEdge) {
 		log.info("loading synaptic edge decision tree");
 		
+		
 		DecisionTree tree =  new DecisionTree(parent, synapticEdge.getNg(), new DecisionTreeData(
 				synapticEdge.getSourceVertex().getOntClass(), 
 				synapticEdge.getProperty(),
 				synapticEdge.getTargetVertex().getOntClass()));	
 		
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));;
-		
+		tree.addQuestion("Type your question here", "Question");
 		setActiveTree(tree);
-		
 		
 		CCortex cCortex =  CCortex.getInstance(ProConfig.get(ProConfig.MONGODB_HOST), ProConfig.get(ProConfig.MONGODB_PORT));
 		DecisionTreeData loadedData = cCortex.load(
@@ -99,6 +100,8 @@ public class DecisionEditorPart {
 			loadDecTreeData(loadedData);
 			
 		}
+		clearLeafMenu();
+		generateMenus(bar);
 		
 	}
 	
@@ -203,6 +206,17 @@ public class DecisionEditorPart {
 		bar.pack();
 
 		ToolItem toolItem_1 = new ToolItem(bar, SWT.SEPARATOR);
+		
+		ToolItem tltmTest = new ToolItem(bar, SWT.NONE);
+		tltmTest.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/sweet/badge-circle-direction-right-16-ns.png"));
+		tltmTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		tltmTest.setText("Test Drive");
+		
+		ToolItem toolItem_2 = new ToolItem(bar, SWT.SEPARATOR);
 		
 		ToolItem tbCommit = new ToolItem(bar, SWT.NONE);
 		tbCommit.addSelectionListener(new SelectionAdapter() {
@@ -396,14 +410,18 @@ public class DecisionEditorPart {
 	private void reset() {
 		if(activeTree == null) return;
 		activeTree.disposeChildren();
+		clearLeafMenu();
+		
+	}
 
+	private void clearLeafMenu() {
 		// Dispose leaf menu
 		while (addLeafMenu.getItemCount() > 0) {
 			addLeafMenu.getItem(0).dispose();
 		}
 
 	}
-
+	
 	protected void addQuestion() {
 		// TODO Auto-generated method stub
 		int selectSize = activeTree.getSelection().size();

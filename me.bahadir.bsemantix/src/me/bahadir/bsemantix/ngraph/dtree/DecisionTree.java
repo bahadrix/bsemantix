@@ -131,6 +131,8 @@ public class DecisionTree extends Graph{
 	
 	private DecisionTreeData decData;
 	
+
+	
 	public DecisionTree(Composite parent, NeuralGraph ng, DecisionTreeData decData) {
 		super(parent, SWT.NONE);
 		this.decData = decData;

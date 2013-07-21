@@ -34,6 +34,12 @@
     
 
 
+    <!-- http://bahadir.me/organiclegislation/question -->
+
+    <owl:AnnotationProperty rdf:about="http://bahadir.me/organiclegislation/question"/>
+    
+
+
     <!-- http://bahadir.me/synapse#cardinality -->
 
     <owl:AnnotationProperty rdf:about="&synapse;cardinality">
@@ -116,7 +122,9 @@
 
     <!-- http://bahadir.me/synapse#address -->
 
-    <owl:DatatypeProperty rdf:about="&synapse;address"/>
+    <owl:DatatypeProperty rdf:about="&synapse;address">
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -162,12 +170,24 @@
         </owl:equivalentClass>
         <rdfs:comment xml:lang="en">Used as unique identification</rdfs:comment>
     </owl:Class>
+    <owl:Axiom>
+        <question rdf:datatype="&xsd;string">Depolama tesisiniz var mı?</question>
+        <owl:annotatedSource rdf:resource="http://bahadir.me/organiclegislation/Person"/>
+        <owl:annotatedProperty rdf:resource="&owl;equivalentClass"/>
+        <owl:annotatedTarget>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bahadir.me/organiclegislation/has"/>
+                <owl:someValuesFrom rdf:resource="http://bahadir.me/organiclegislation/StorageFacility"/>
+            </owl:Restriction>
+        </owl:annotatedTarget>
+    </owl:Axiom>
     
 
 
     <!-- http://bahadir.me/organiclegislation/StorageFacility -->
 
     <owl:Class rdf:about="http://bahadir.me/organiclegislation/StorageFacility">
+        <rdfs:label rdf:datatype="&xsd;string">Depolama tesisi</rdfs:label>
         <owl:equivalentClass>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&synapse;hasStorageType"/>
@@ -201,6 +221,7 @@
 
     <owl:NamedIndividual rdf:about="&synapse;StroteFacilityClass1">
         <rdf:type rdf:resource="http://bahadir.me/organiclegislation/StorageFacilityType"/>
+        <rdfs:label rdf:datatype="&xsd;string">1. Sınıf Depolama Tesisi</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -209,6 +230,7 @@
 
     <owl:NamedIndividual rdf:about="&synapse;StroteFacilityClass2">
         <rdf:type rdf:resource="http://bahadir.me/organiclegislation/StorageFacilityType"/>
+        <rdfs:label rdf:datatype="&xsd;string">2. Sınıf Depolama Tesisi</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -217,6 +239,7 @@
 
     <owl:NamedIndividual rdf:about="&synapse;StroteFacilityClass3">
         <rdf:type rdf:resource="http://bahadir.me/organiclegislation/StorageFacilityType"/>
+        <rdfs:label rdf:datatype="&xsd;string">3. Sınıf Depolama Tesisi</rdfs:label>
     </owl:NamedIndividual>
 </rdf:RDF>
 
