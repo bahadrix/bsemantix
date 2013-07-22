@@ -3,10 +3,13 @@ package me.bahadir.bsemantix.parts;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import me.bahadir.bsemantix.parts.metaeditor.NodeMeta;
+
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.widgets.Display;
 
@@ -25,6 +28,8 @@ public class SimulatorPart {
 		
 		NodeMeta nm = new NodeMeta(parent, SWT.None);
 		formToolkit.paintBordersFor(nm);
+		
+
 	}
 
 	@PreDestroy

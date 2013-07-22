@@ -12,6 +12,7 @@ import me.bahadir.bsemantix.ngraph.BenchObject;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SynapticEdge;
+import me.bahadir.bsemantix.parts.metaeditor.MetaCard;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
@@ -54,7 +55,7 @@ public class EntitiesListPart extends ViewPart{
 	}
 	
 	@PostConstruct
-	public void postConstruct(Composite parent, final EPartService partService) {
+	public void postConstruct(final Composite parent, final EPartService partService) {
 		
 		
 
@@ -75,6 +76,13 @@ public class EntitiesListPart extends ViewPart{
 				} else if(item instanceof SynapticEdge) {
 					partService.activate(partService.findPart("me.bahadir.bsemantix.part.DecisionEditor"));
 					S.broker.post(DecisionEditorPart.TOPIC_EDIT_SYNAPTIC_EDGE, item);
+				} else if(item instanceof SphereNode) {
+					SphereNode sn = (SphereNode) item;
+					
+					MetaCard mc = new MetaCard(parent.getShell(), sn.getOntClass());
+					mc.create();
+					mc.open();
+					sn.getOntClass().getOntModel().write(System.out);
 				}
 			}
 		});

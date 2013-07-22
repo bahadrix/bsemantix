@@ -11,12 +11,15 @@ import com.hp.hpl.jena.ontology.Restriction;
 import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
 import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.OWL2;
 
 public class Restrict implements Serializable {
 
-	/**
-	 * 
-	 */
+	public static enum PredicateType {DATA_TYPE, OBJECT_TYPE};
+	
+
 	private static final long serialVersionUID = 4550267765831103782L;
 
 	protected static Logger log = Logger.getLogger(Restrict.class.getSimpleName());
@@ -24,6 +27,7 @@ public class Restrict implements Serializable {
 	public static final int STAR_CARDINAL = -1;
 
 	private OntClass range;
+	private Resource dataRange;
 	private OntClass source;
 	private Property predicate;
 	private int minCardinality = STAR_CARDINAL;
@@ -31,84 +35,98 @@ public class Restrict implements Serializable {
 	private int exactCardinality = STAR_CARDINAL;
 	private Restriction owlRestriction;
 
-	private static Property pQualifiedCard, pMinQualifiedCard, pMaxQualifiedCard, pOnClass, pOnDataRange;
+	private PredicateType predicateType = PredicateType.OBJECT_TYPE;
+	
 
 	public static Restrict createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction) {
-		try {
-			return new Restrict(ontClass, owlRestriction);
-		} catch (UnsupportedOperationException ue) {
-			log.warning(ue.getLocalizedMessage());
-		} catch (ConversionException ce) {
-			log.warning(ce.getLocalizedMessage());
+		return createFromOwlRestriction(ontClass, owlRestriction, false);
+	}
+	public static Restrict createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction, boolean allowLiterals) {
+		Restrict r = new Restrict(ontClass, owlRestriction);		
+		if(!allowLiterals && r.predicateType == PredicateType.DATA_TYPE) {
+			System.out.println("literal switch is off!");
+			return null;
+		} else {
+			return r;
 		}
-		return null;
 	}
 
 	private Restrict(OntClass ontClass, Restriction owlRestriction) {
 		this.owlRestriction = owlRestriction;
+
 		setSource(ontClass);
 		setPredicate(owlRestriction.getOnProperty());
-
-		pQualifiedCard = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#qualifiedCardinality");
-		pMinQualifiedCard = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#minQualifiedCardinality");
-		pMaxQualifiedCard = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#maxQualifiedCardinality");
-		pOnClass = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#onClass");
-		pOnDataRange = owlRestriction.getModel().getProperty("http://www.w3.org/2002/07/owl#onDataRange");
-
-		if (owlRestriction.hasProperty(pOnDataRange)) {
-			throw new UnsupportedOperationException("Data range restrictions not implemented yet");
-		} else {
-			resolve();
-		}
+		resolve();
+		
 
 	}
 	
 
 
 	private void resolve() {
-
+		Resource range = null;
 		OntClass rangeClass = null;
 
 		// CARDINALITY 0-*
 		if (owlRestriction.isSomeValuesFromRestriction()) { // some values
 															// restriction
 			setMinCardinality(0);
-			// log.info("\t\t(some)");
 			SomeValuesFromRestriction someRest = owlRestriction.asSomeValuesFromRestriction();
-
-			rangeClass = someRest.getSomeValuesFrom().as(OntClass.class);
+			
+			range = someRest.getSomeValuesFrom();
 
 		} else if (owlRestriction.isAllValuesFromRestriction()) { // CARDINALITY
 																	// 0-*
 			setMinCardinality(0);
 			AllValuesFromRestriction allRest = owlRestriction.asAllValuesFromRestriction();
-			rangeClass = allRest.getAllValuesFrom().as(OntClass.class);
+			range = allRest.getAllValuesFrom();
 		} else {
 
-			if (owlRestriction.hasProperty(pQualifiedCard)) { // CARDINALITY
+			if (owlRestriction.hasProperty(OWL2.qualifiedCardinality)) { // CARDINALITY
 																// n
-				int cardInt = owlRestriction.getPropertyValue(pQualifiedCard).asLiteral().getInt();
+				int cardInt = owlRestriction.getPropertyValue(OWL2.qualifiedCardinality).asLiteral().getInt();
 				setExactCardinality(cardInt);
-				rangeClass = owlRestriction.getPropertyValue(pOnClass).as(OntClass.class);
-			} else if (owlRestriction.hasProperty(pMinQualifiedCard)) { // CARDINALITY
-																		// n-*
-				int cardInt = owlRestriction.getPropertyValue(pQualifiedCard).asLiteral().getInt();
-				rangeClass = owlRestriction.getPropertyValue(pOnClass).as(OntClass.class);
+			} else if (owlRestriction.hasProperty(OWL2.minQualifiedCardinality)) { // CARDINALITY
+				int cardInt = owlRestriction.getPropertyValue(OWL2.minQualifiedCardinality).asLiteral().getInt();
 				setMinCardinality(cardInt);
-			} else if (owlRestriction.hasProperty(pMaxQualifiedCard)) { // CARDINALITY
-																		// *-n
-				int cardInt = owlRestriction.getPropertyValue(pQualifiedCard).asLiteral().getInt();
-				rangeClass = owlRestriction.getPropertyValue(pOnClass).as(OntClass.class);
+			} else if (owlRestriction.hasProperty(OWL2.maxQualifiedCardinality)) { // CARDINALITY																// *-n
+				int cardInt = owlRestriction.getPropertyValue(OWL2.maxQualifiedCardinality).asLiteral().getInt();
 				setMaxCardinality(cardInt);
 			} else {
 				// log.warning("Restriction format is not supported");
 			}
-
+			
+			if(owlRestriction.hasProperty(OWL2.onDataRange) ) {
+				range = owlRestriction.getPropertyValue(OWL2.onDataRange).asResource();
+			} else if (owlRestriction.hasProperty(OWL2.onClass)) {
+				range = owlRestriction.getPropertyValue(OWL2.onClass).asResource();
+				
+			}
+		
+					
 		}
 
-		if (rangeClass != null) {
-			setRange(rangeClass);
+		if (range != null) {
+			if(range.canAs(OntClass.class)) {
+				this.predicateType = PredicateType.OBJECT_TYPE;
+				setRange(range.as(OntClass.class));
+			} else {
+				this.predicateType = PredicateType.DATA_TYPE;
+				setDataRange(range);
+			}
+			
 		}
+	}
+
+	public PredicateType getPredicateType() {
+		return predicateType;
+	}
+	public Resource getDataRange() {
+		return dataRange;
+	}
+
+	public void setDataRange(Resource dataRange) {
+		this.dataRange = dataRange;
 	}
 
 	public Property getPredicate() {
