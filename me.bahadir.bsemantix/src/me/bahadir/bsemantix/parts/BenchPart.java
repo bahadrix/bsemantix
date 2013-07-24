@@ -1,7 +1,9 @@
 package me.bahadir.bsemantix.parts;
 
 import java.awt.Frame;
+import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +18,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.AboutToShow;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -31,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IPartService;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -38,6 +43,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class BenchPart extends PartBase {
 	protected static Logger log = Logger.getLogger(BenchPart.class.getSimpleName());
 
+	@Inject
+	private EPartService partService;
 	private String ontoText = "";
 	private NeuralBench nb;
 
@@ -48,6 +55,24 @@ public class BenchPart extends PartBase {
 
 	}
 
+	@Inject @Optional
+	void out(@UIEventTopic("PRINT_ONTOLOGY") String s) {
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			
+			nb.getOntoAdapter().getModel().write(baos, s);
+			
+			try {
+				String code = new String(baos.toByteArray(), "UTF-8");
+				log.info(code);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
+	}
+	
 	@PostConstruct
 	public void createComposite(Composite parent, MApplication application) {
 		BenchPart.application = application;

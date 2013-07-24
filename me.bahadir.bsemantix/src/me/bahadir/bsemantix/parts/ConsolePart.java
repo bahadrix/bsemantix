@@ -14,14 +14,19 @@ import org.eclipse.swt.widgets.Composite;
 
 public class ConsolePart {
 	public static final String TOPIC_CONSOLE_INFO = "CONSOLE_INFO";
+	public static final String TOPIC_CONSOLE_CLEAR = "CONSOLE_CLEAR";
 	private StyledText consoleText;
 	
 	@Inject @Optional
 	void out(@UIEventTopic(TOPIC_CONSOLE_INFO) String s) {
-		consoleText.append(s);
-		
+		consoleText.append(s);		
 		consoleText.selectAll();
 		consoleText.setSelection(consoleText.getCharCount());
+	}
+	
+	@Inject @Optional
+	void clear(@UIEventTopic(TOPIC_CONSOLE_CLEAR) String s) {
+		consoleText.setText("");
 	}
 	
 	@Inject

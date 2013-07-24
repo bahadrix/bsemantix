@@ -21,7 +21,11 @@
                 </children>
               </children>
               <children xsi:type="basic:PartStack" xmi:id="_MYmYMOksEeK0iM6MdpvU2Q" elementId="me.bahadir.bsemantix.partstack.1" containerData="7663">
-                <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console"/>
+                <children xsi:type="basic:Part" xmi:id="_xpEecN2OEeKHF8nFnBElvw" elementId="me.bahadir.bsemantix.part.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.ConsolePart" label="Console">
+                  <toolbar xmi:id="_l3_p8PSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.toolbar.1">
+                    <children xsi:type="menu:HandledToolItem" xmi:id="_nZMW8PSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.handledtoolitem.0" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sweet/cross-16-ns.png" tooltip="Clear Console" command="_w5aI8PSAEeKD0darlIBcKQ"/>
+                  </toolbar>
+                </children>
                 <children xsi:type="basic:Part" xmi:id="_mRY_0OzJEeKR3eTpSca3vg" elementId="me.bahadir.bsemantix.part.dectprop" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.parts.DTProperties" label="Properties"/>
               </children>
             </children>
@@ -58,6 +62,7 @@
   <handlers xmi:id="_AtaC29ToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.saveCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.SaveHandler" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_Atap4NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.aboutCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.AboutHandler" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_WYNlkNTsEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ShowHandler" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
+  <handlers xmi:id="_1sy_cPSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.handler.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ClearConsole" command="_w5aI8PSAEeKD0darlIBcKQ"/>
   <bindingTables xmi:id="_AtaC1dToEeKb2Mvea7mUsQ" bindingContext="_AtaC0NToEeKb2Mvea7mUsQ">
     <bindings xmi:id="_AtaC1tToEeKb2Mvea7mUsQ" keySequence="M1+Q" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
     <bindings xmi:id="_AtaC2dToEeKb2Mvea7mUsQ" keySequence="M1+O" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
@@ -74,6 +79,7 @@
   <commands xmi:id="_AtaC2tToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>
   <commands xmi:id="_AtaC3dToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
   <commands xmi:id="_v4cUANTrEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.showname" commandName="showCommand"/>
+  <commands xmi:id="_w5aI8PSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.command.clearConsole" commandName="clearConsole"/>
   <addons xmi:id="_AtZbwtToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_AtZbw9ToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_AtZbxNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
