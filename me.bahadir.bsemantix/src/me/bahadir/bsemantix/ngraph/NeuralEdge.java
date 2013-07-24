@@ -62,7 +62,7 @@ public class NeuralEdge implements BenchObject{
 		this.targetVertex = targetVertex;
 		
 		if(sourceVertex == null) throw new IllegalArgumentException("Source vertex of an edge can't be null");
-		if(targetVertex == null) throw new IllegalArgumentException("Target vertex of an edge can't be null");
+		if(targetVertex == null) throw new IllegalArgumentException("Target vertex of an edge can't be null. Source: " + sourceVertex.getName());
 		
 		
 		this.transformGroup = new TransformGroup();

@@ -1,71 +1,98 @@
 package me.bahadir.bsemantix.ngraph;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
+import me.bahadir.bsemantix.S;
+
 import com.hp.hpl.jena.ontology.AllValuesFromRestriction;
-import com.hp.hpl.jena.ontology.ConversionException;
 import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.ontology.OntProperty;
+import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.ontology.Restriction;
 import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
-import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.OWL2;
 
-public class Restrict implements Serializable {
+public class NodeMeta implements Serializable {
 
 	public static enum PredicateType {DATA_TYPE, OBJECT_TYPE};
 	
 
 	private static final long serialVersionUID = 4550267765831103782L;
 
-	protected static Logger log = Logger.getLogger(Restrict.class.getSimpleName());
+	protected static Logger log = Logger.getLogger(NodeMeta.class.getSimpleName());
 
 	public static final int STAR_CARDINAL = -1;
 
-	private OntClass range;
-	private Resource dataRange;
+	private Resource range;
 	private OntClass source;
 	private Property predicate;
 	private int minCardinality = STAR_CARDINAL;
 	private int maxCardinality = STAR_CARDINAL;
 	private int exactCardinality = STAR_CARDINAL;
-	private Restriction owlRestriction;
+
 
 	private PredicateType predicateType = PredicateType.OBJECT_TYPE;
 	
 
-	public static Restrict createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction) {
-		return createFromOwlRestriction(ontClass, owlRestriction, false);
+	public static NodeMeta createFromProperty(OntClass ontClass, Property property, Resource type, boolean mandatory) {
+		
+		NodeMeta nodeMeta = new NodeMeta(ontClass);
+		nodeMeta.predicateType = PredicateType.DATA_TYPE;
+		if(mandatory) nodeMeta.setExactCardinality(1);
+		nodeMeta.setPredicate(property);
+		nodeMeta.setRange(type);
+		return nodeMeta;
+		
 	}
-	public static Restrict createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction, boolean allowLiterals) {
-		Restrict r = new Restrict(ontClass, owlRestriction);		
-		if(!allowLiterals && r.predicateType == PredicateType.DATA_TYPE) {
+	
+	public static NodeMeta createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction, boolean allowLiterals) {
+		NodeMeta nodeMeta = new NodeMeta(ontClass);		
+		if(!allowLiterals && nodeMeta.predicateType == PredicateType.DATA_TYPE) {
 			System.out.println("literal switch is off!");
 			return null;
 		} else {
-			return r;
+			nodeMeta.setPredicate(owlRestriction.getOnProperty());
+			nodeMeta.resolve(owlRestriction);
+			return nodeMeta;
 		}
 	}
 
-	private Restrict(OntClass ontClass, Restriction owlRestriction) {
-		this.owlRestriction = owlRestriction;
-
+	/**
+	 * Constructor
+	 * @param ontClass
+	 */
+	private NodeMeta(OntClass ontClass) {
 		setSource(ontClass);
-		setPredicate(owlRestriction.getOnProperty());
-		resolve();
-		
 
 	}
 	
 
+	
+	public String getRangeLabel() {
+		OntResource ores = source.getOntModel().getOntResource(range);
+		if(ores.getLabel("tr") != null) {
+			return ores.getLabel("tr");
+		} else {
+			return ores.getLocalName();
+		}
+	}
+	
+	public String getPredicateLabel() {
+		return S.getPropertyCaption(source.getOntModel(), predicate);
+		
+	}
+	
+	public OntProperty getOntPredicate() {
+		return source.getOntModel().getOntProperty(predicate.getURI());
+	}
 
-	private void resolve() {
-		Resource range = null;
-		OntClass rangeClass = null;
+	private void resolve(Restriction owlRestriction) {
+	
+
 
 		// CARDINALITY 0-*
 		if (owlRestriction.isSomeValuesFromRestriction()) { // some values
@@ -97,8 +124,10 @@ public class Restrict implements Serializable {
 			}
 			
 			if(owlRestriction.hasProperty(OWL2.onDataRange) ) {
+				this.predicateType = PredicateType.DATA_TYPE;
 				range = owlRestriction.getPropertyValue(OWL2.onDataRange).asResource();
 			} else if (owlRestriction.hasProperty(OWL2.onClass)) {
+				this.predicateType = PredicateType.OBJECT_TYPE;
 				range = owlRestriction.getPropertyValue(OWL2.onClass).asResource();
 				
 			}
@@ -106,27 +135,16 @@ public class Restrict implements Serializable {
 					
 		}
 
-		if (range != null) {
-			if(range.canAs(OntClass.class)) {
-				this.predicateType = PredicateType.OBJECT_TYPE;
-				setRange(range.as(OntClass.class));
-			} else {
-				this.predicateType = PredicateType.DATA_TYPE;
-				setDataRange(range);
-			}
-			
-		}
 	}
 
+	public boolean isExtensible() {
+		return // extensible olabilmesi icin
+				getRange() != null // hedef bos olmayacak 
+				&& getRange().canAs(OntClass.class); // hedef bir owl2 sinif olacak
+	}
+	
 	public PredicateType getPredicateType() {
 		return predicateType;
-	}
-	public Resource getDataRange() {
-		return dataRange;
-	}
-
-	public void setDataRange(Resource dataRange) {
-		this.dataRange = dataRange;
 	}
 
 	public Property getPredicate() {
@@ -137,11 +155,11 @@ public class Restrict implements Serializable {
 		this.predicate = predicate;
 	}
 
-	public OntClass getRange() {
+	public Resource getRange() {
 		return range;
 	}
 
-	public void setRange(OntClass range) {
+	public void setRange(Resource range) {
 		this.range = range;
 	}
 

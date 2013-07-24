@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NeuralEdge;
 import me.bahadir.bsemantix.ngraph.NeuralGraph;
-import me.bahadir.bsemantix.ngraph.Restrict;
+import me.bahadir.bsemantix.ngraph.NodeMeta;
 import me.bahadir.bsemantix.ngraph.RestrictedEdge;
 import me.bahadir.bsemantix.ngraph.SphereNode;
 import me.bahadir.bsemantix.ngraph.SphereNode.ResourceType;
@@ -163,19 +163,29 @@ public class OntoAdapter {
 			throw new Exception("Source node not found with uri " + sourceUri);
 		if (source.resourceType != ResourceType.CLASS)
 			throw new Exception("Source must be a ontclass " + sourceUri);
+		
 		OntClass cls = source.getOntClass();
-		Restrict restrict = Restrict.createFromOwlRestriction(cls, rest);
-		if (restrict != null) {
-			if (rest.getOnProperty().hasProperty(pIsSynaptic)) {
-
-				ng.addEdge(new SynapticEdge(ng, restrict));
-
-			} else {
-
-				ng.addEdge(new RestrictedEdge(ng, restrict));
-
+		
+		NodeMeta nodeMeta = NodeMeta.createFromOwlRestriction(cls, rest, false);
+		try {
+			if (nodeMeta != null) {
+				if(nodeMeta.getRange() == null) {
+					throw new Exception("Restriction target range is null");
+				}
+				if (rest.getOnProperty().hasProperty(pIsSynaptic)) {
+					SynapticEdge se = new SynapticEdge(ng, nodeMeta);
+					ng.addEdge(se);
+	
+				} else {
+					RestrictedEdge re = new RestrictedEdge(ng, nodeMeta);
+					ng.addEdge(re);
+	
+				}
 			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
+		
 
 	}
 

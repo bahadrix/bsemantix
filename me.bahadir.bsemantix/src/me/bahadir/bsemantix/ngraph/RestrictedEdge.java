@@ -17,16 +17,16 @@ public class RestrictedEdge extends NeuralEdge{
 	 */
 	private static final long serialVersionUID = 3573456923335915407L;
 	protected static Logger log = Logger.getLogger(RestrictedEdge.class.getSimpleName());
-	protected Restrict rest;
+	protected NodeMeta nodeMeta;
 	
-	public RestrictedEdge(NeuralGraph ng, Restrict rest) {
+	public RestrictedEdge(NeuralGraph ng, NodeMeta nodeMeta) {
 		super(
-				ng.getNodeByUri(rest.getSource().getURI()), 
-				ng.getNodeByUri(rest.getRange().getURI()));
+				ng.getNodeByUri(nodeMeta.getSource().getURI()), 
+				ng.getNodeByUri(nodeMeta.getRange().getURI()));
 		setNg(ng);
-		setName(String.format("%s", rest.getPredicate().getLocalName()));
+		setName(String.format("%s", nodeMeta.getPredicate().getLocalName()));
 		
-		this.rest = rest;
+		this.nodeMeta = nodeMeta;
 	}
 	
 	@Override
@@ -38,24 +38,24 @@ public class RestrictedEdge extends NeuralEdge{
 	@Override
 	public Property getProperty() {
 	
-		return rest.getPredicate();
+		return nodeMeta.getPredicate();
 	}
 
 	@Override
 	public List<TreePair> getSpecPairs() {
 		List<TreePair> pairs = new LinkedList<>();
 		
-		pairs.add(new TreePair("Property URI", rest.getPredicate().getURI()));
+		pairs.add(new TreePair("Property URI", nodeMeta.getPredicate().getURI()));
 		
 		//Cardinality Label
 		
 		String cardinalityLabel = "Cardinality";
-		String exactCardLabel = rest.getExactCardinality() == Restrict.STAR_CARDINAL ? "*" : String.valueOf(rest.getExactCardinality());
-		String minCardLabel = rest.getMinCardinality() == Restrict.STAR_CARDINAL ? "*" : String.valueOf(rest.getMinCardinality());
-		String maxCardLabel = rest.getMaxCardinality() == Restrict.STAR_CARDINAL ? "*" : String.valueOf(rest.getMaxCardinality());
+		String exactCardLabel = nodeMeta.getExactCardinality() == NodeMeta.STAR_CARDINAL ? "*" : String.valueOf(nodeMeta.getExactCardinality());
+		String minCardLabel = nodeMeta.getMinCardinality() == NodeMeta.STAR_CARDINAL ? "*" : String.valueOf(nodeMeta.getMinCardinality());
+		String maxCardLabel = nodeMeta.getMaxCardinality() == NodeMeta.STAR_CARDINAL ? "*" : String.valueOf(nodeMeta.getMaxCardinality());
 		
-		if(rest.getExactCardinality() != Restrict.STAR_CARDINAL) {
-			cardinalityLabel += String.format(" (exact %d)", rest.getExactCardinality());
+		if(nodeMeta.getExactCardinality() != NodeMeta.STAR_CARDINAL) {
+			cardinalityLabel += String.format(" (exact %d)", nodeMeta.getExactCardinality());
 		} else {
 			cardinalityLabel += String.format(" (%s..%s)", minCardLabel, maxCardLabel);
 		}

@@ -4,8 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import me.bahadir.bsemantix.ngraph.Restrict;
-import me.bahadir.bsemantix.ngraph.Restrict.PredicateType;
+import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ngraph.NodeMeta;
+import me.bahadir.bsemantix.ngraph.NodeMeta.PredicateType;
+import me.bahadir.bsemantix.parts.metaeditor.MetaField.MetaCardSaveException;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -36,8 +38,10 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.OWL2;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 public class MetaCard extends FormDialog {
@@ -49,15 +53,19 @@ public class MetaCard extends FormDialog {
 	private OntClass ontClass = null;
 	private Text text_1;
 	private List<MetaField> metaFields;
+	private Text txtName;
 	
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public MetaCard(Shell shell, OntClass cls) {
+	public MetaCard(Shell shell, OntClass cls, Individual individual) {
 		super(shell);
+		
+		if(cls == null) log.severe("OntClass cant be null");
 		this.ontClass = cls;
-		setHelpAvailable(false);
+		this.individual = individual == null ? cls.createIndividual(String.format("%sind%d", cls.getNameSpace(), System.currentTimeMillis())) : individual;
 		this.metaFields = new LinkedList<>();
+		setHelpAvailable(false);
 	}
 
 	private void loadOntClass(IManagedForm managedForm) {
@@ -70,9 +78,6 @@ public class MetaCard extends FormDialog {
 		
 		
 		
-		this.individual = ontClass.createIndividual();
-		
-		
 		ExtendedIterator<OntClass> exeq = ontClass.listEquivalentClasses();
 		
 		while(exeq.hasNext()) {
@@ -80,12 +85,8 @@ public class MetaCard extends FormDialog {
 			if(eqClass.isRestriction()) {
 				
 				Restriction rest = eqClass.asRestriction();
-				Restrict restrict = Restrict.createFromOwlRestriction(ontClass, rest, true);
-				if(restrict.getPredicateType() == PredicateType.DATA_TYPE) {					
-					
-					addMetaPro(managedForm,	restrict);
-					
-				}
+				NodeMeta nodeMeta = NodeMeta.createFromOwlRestriction(ontClass, rest, true);
+				addMetaPro(managedForm,	nodeMeta);
 
 			}
 		}
@@ -96,17 +97,34 @@ public class MetaCard extends FormDialog {
 	}
 	
 	
+	
+	public Individual getIndividual() {
+		return individual;
+	}
+
 	private boolean saveAll() {
 		boolean totalSuccess = true;
-		for(MetaField mf : metaFields) {
-			boolean succ = mf.save();
-			if(!succ) System.out.println(mf);
-			totalSuccess &= succ;	
+		try {
+			saveBundleProps();
+			for (MetaField mf : metaFields) {
+				boolean succ = mf.save();
+				if (!succ)
+					System.out.println(mf);
+				totalSuccess &= succ;
+			}
+			
+		} catch (MetaCardSaveException me) {
+			log.info(me.getMessage());
 		}
 		return totalSuccess;
 	}
-
 	
+	private void saveBundleProps() throws MetaCardSaveException {
+//		if(txtName.getText().trim().length() < 1)
+//			throw new MetaCardSaveException(null, "Must enter name");
+//		
+//		individual.setPropertyValue(DC.title, value);
+	}
 	
 	@Override
 	protected void buttonPressed(int buttonId) {
@@ -119,19 +137,42 @@ public class MetaCard extends FormDialog {
 		super.buttonPressed(buttonId);
 	}
 
-	private <T> void addMetaPro(IManagedForm managedForm, Restrict restrict) {
+	private void addMetaPro(IManagedForm managedForm, NodeMeta nodeMeta) {
+		addMetaPro(managedForm, nodeMeta, null);
+		
+	}
+	private void addMetaPro(IManagedForm managedForm, NodeMeta nodeMeta, String label) {
 		
 		Label lblNewLabel = new Label(managedForm.getForm().getBody(), SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		managedForm.getToolkit().adapt(lblNewLabel, true, true);
-		lblNewLabel.setText(restrict.getPredicate().getLocalName());
+		if(label == null) {
+			lblNewLabel.setText(S.getPropertyCaption(nodeMeta.getSource().getOntModel(), nodeMeta.getPredicate()));
+		} else {
+			lblNewLabel.setText(label);
+		}
 
-		//if(restrict.getDataRange().equals(XSD.xstring)) {
-		MetaField metaField = new CLiteralString(managedForm.getForm().getBody(), individual, restrict.getPredicate());
-		metaField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		managedForm.getToolkit().adapt(metaField, true, true);
+		MetaField metaField = null;
 		
-		metaFields.add(metaField);
+		log.info(nodeMeta.getPredicateLabel());
+		
+		switch(nodeMeta.getPredicateType()) {
+		case DATA_TYPE:
+			
+			metaField = new CLiteralString(managedForm.getForm().getBody(), individual, nodeMeta);
+			
+			break;
+		case OBJECT_TYPE:
+			metaField = new CIndividualSelect(managedForm.getForm().getBody(), individual, nodeMeta);
+			lblNewLabel.setText(nodeMeta.getPredicateLabel() +" : " + nodeMeta.getRangeLabel());
+			break;
+		}
+		//if(restrict.getDataRange().equals(XSD.xstring)) {
+		if(metaField != null) {
+			metaField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			managedForm.getToolkit().adapt(metaField, true, true);
+			metaFields.add(metaField);
+		}
 
 	}
 	
@@ -143,15 +184,22 @@ public class MetaCard extends FormDialog {
 	protected void createFormContent(IManagedForm managedForm) {
 		FormToolkit toolkit = managedForm.getToolkit();
 		ScrolledForm form = managedForm.getForm();
-		form.setText("Create Person Instance");
+		form.setText(String.format("Create %s instance", ontClass.getLocalName()));
 		Composite body = form.getBody();
 		toolkit.decorateFormHeading(form.getForm());
 		toolkit.paintBordersFor(body);
 		managedForm.getForm().getBody().setLayout(new GridLayout(2, false));
+		
+		
 
+		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
 		
 		loadOntClass(managedForm);
 
 	}
+
+
+
+
 
 }

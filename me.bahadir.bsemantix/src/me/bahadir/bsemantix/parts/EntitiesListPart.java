@@ -27,6 +27,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.jgrapht.GraphPath;
 
+import com.hp.hpl.jena.ontology.Individual;
+import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.ontology.OntResource;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+
 public class EntitiesListPart extends ViewPart{
 	protected static Logger log = Logger.getLogger(EntitiesListPart.class.getSimpleName());
 	public static final String TOPIC_SET_GRAPH = "PATHS_PART/SET_PATH";
@@ -78,9 +83,18 @@ public class EntitiesListPart extends ViewPart{
 					S.broker.post(DecisionEditorPart.TOPIC_EDIT_SYNAPTIC_EDGE, item);
 				} else if(item instanceof SphereNode) {
 					SphereNode sn = (SphereNode) item;
+					OntClass cls = sn.getOntClass();
+					ExtendedIterator<? extends OntResource> inds = cls.listInstances();
 					
-					MetaCard mc = new MetaCard(parent.getShell(), sn.getOntClass());
+					Individual ind = null;
+					
+					while(inds.hasNext()) {
+						ind = inds.next().asIndividual();
+					}
+					
+					MetaCard mc = new MetaCard(parent.getShell(), sn.getOntClass(), ind);
 					mc.create();
+					mc.getShell().setSize(500, 600);
 					mc.open();
 					sn.getOntClass().getOntModel().write(System.out);
 				}

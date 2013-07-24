@@ -50,6 +50,13 @@ import org.osgi.framework.FrameworkUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.hp.hpl.jena.ontology.Individual;
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntProperty;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.DC;
+
 /**
  * Global Static methods
  * 
@@ -73,6 +80,37 @@ public class S {
 	public static IEventBroker broker;
 	public static MApplication application;
 
+	
+	public static String getPropertyCaption(OntModel om, Property p) {
+		if(om != null && p != null) {
+			OntProperty op = om.getOntProperty(p.getURI());
+			if(op != null && op.getLabel("tr") != null) {
+				return op.getLabel("tr"); 
+			}
+		}
+		
+		
+		if(p.getLocalName() != null){
+			return p.getLocalName();
+		} else if(p.getURI()!= null){
+			return p.getURI();
+		} else {
+			return "<property>";
+		}
+			
+	}
+	
+	public static String getIndividualCaption(Individual ind) {
+		if(ind.getPropertyValue(DC.title) != null) {
+			return ind.getPropertyValue(DC.title).asLiteral().getString(); 
+		} else if(ind.getLabel("tr") != null) {
+			return ind.getLabel("tr"); 
+		} else if(ind.getLocalName() != null){
+			return ind.getLocalName();
+		} else {
+			return "<individual>";
+		}
+	}
 	
 	public static String xmlize(String s) {
 		return s.replace("<", "").replace(">", "");

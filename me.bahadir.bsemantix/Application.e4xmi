@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_AtZbwNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ide.application" bindingContexts="_AtaC0NToEeKb2Mvea7mUsQ">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_AtZbwdToEeKb2Mvea7mUsQ" label="BSemantix" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/icon32.png" x="120" y="120" width="900" height="700">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_AtZbwdToEeKb2Mvea7mUsQ" label="BSemantix" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/icon32.png" x="120" y="120" width="1200" height="800">
     <children xsi:type="basic:PartSashContainer" xmi:id="_p6PhQNXdEeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.partsashcontainer.0" selectedElement="_Atap6dToEeKb2Mvea7mUsQ" horizontal="true">
       <children xsi:type="advanced:PerspectiveStack" xmi:id="_Atap6dToEeKb2Mvea7mUsQ" elementId="PerspectiveStack">
         <children xsi:type="advanced:Perspective" xmi:id="_Atap6tToEeKb2Mvea7mUsQ">

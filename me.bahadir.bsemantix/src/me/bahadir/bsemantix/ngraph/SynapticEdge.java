@@ -16,8 +16,8 @@ public class SynapticEdge extends RestrictedEdge {
 	protected static Logger log = Logger.getLogger(SynapticEdge.class.getSimpleName());
 
 	
-	public SynapticEdge(NeuralGraph ng, Restrict rest) {
-		super(ng, rest);
+	public SynapticEdge(NeuralGraph ng, NodeMeta nodeMeta) {
+		super(ng, nodeMeta);
 		// TODO Auto-generated constructor stub
 	}
 
