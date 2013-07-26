@@ -171,7 +171,7 @@ public class DecisionTree extends Graph{
 	
 	private Question loadQuestionRoot(QuestionData qData) {
 		Question q = new Question(this, qData);
-		System.out.println(qData.getAnswerDatas().toString());
+
 		for(AnswerData aData : qData.getAnswerDatas()) {
 			
 			System.out.println(aData);
@@ -284,10 +284,10 @@ public class DecisionTree extends Graph{
 	
 	
 	
-	public Answer addAnswer(Question source, GraphNode target, AnswerData aData) {
-
+	public Answer addAnswer(Question source, DecisionNode target, AnswerData aData) {
 		return new Answer(this, source, target, aData);
 	}
+	
 	
 	public Leaf createBlockLeaf() {
 		return Leaf.createBlockLeaf(this);

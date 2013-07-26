@@ -3,7 +3,7 @@ package me.bahadir.bsemantix.parts;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import me.bahadir.bsemantix.parts.metaeditor.NodeMeta;
+import me.bahadir.bsemantix.parts.metaeditor.CNodeMeta;
 
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.swt.widgets.Composite;
@@ -26,7 +26,7 @@ public class SimulatorPart {
 	public void createControls(Composite parent) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		NodeMeta nm = new NodeMeta(parent, SWT.None);
+		CNodeMeta nm = new CNodeMeta(parent, SWT.None);
 		formToolkit.paintBordersFor(nm);
 		
 

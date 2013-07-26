@@ -16,7 +16,7 @@ import me.bahadir.bsemantix.ngraph.dtree.Answer.AnswerData;
 import org.eclipse.swt.SWT;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-public class Question extends GraphNode implements Serializable{
+public class Question extends DecisionNode implements Serializable{
 
 	/**
 	 * 
@@ -33,6 +33,8 @@ public class Question extends GraphNode implements Serializable{
 		@XmlAttribute private int locationY = 0;
 		
 		@XmlElement(name="answer") private List<AnswerData> answerDatas;
+		
+
 		
 		private Question question = null;
 		
@@ -82,9 +84,14 @@ public class Question extends GraphNode implements Serializable{
 			if(question != null)
 				question.setText(shortText);
 		}
+
+
+		
 		
 		
 	}
+	
+
 	
 	public String getXMLStartTag() {
 		return String.format("<question text=\"%s\" shortText=\"%s\" locationX=\"%d\" locationY=\"%d\">"

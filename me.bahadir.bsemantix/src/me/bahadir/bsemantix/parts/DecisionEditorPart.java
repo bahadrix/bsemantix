@@ -25,6 +25,7 @@ import me.bahadir.bsemantix.ngraph.dtree.DecisionTree.DecisionTreeData;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf;
 import me.bahadir.bsemantix.ngraph.dtree.Leaf.LeafData;
 import me.bahadir.bsemantix.ngraph.dtree.Question;
+import me.bahadir.bsemantix.parts.metaeditor.DecisionDialog;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
@@ -49,7 +50,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
-import com.hp.hpl.jena.rdf.model.Property;
 
 public class DecisionEditorPart {
 	
@@ -212,6 +212,7 @@ public class DecisionEditorPart {
 		tltmTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				testDrive();
 			}
 		});
 		tltmTest.setText("Test Drive");
@@ -232,6 +233,13 @@ public class DecisionEditorPart {
 
 	}
 
+	private void testDrive() {
+		
+		DecisionDialog dd = new DecisionDialog(shell, activeTree.getDecisionTreeData());
+		dd.create();
+		dd.open();
+	}
+	
 	protected void commit2CCortex() {
 		
 		CCortex ccortex = S.getStandartCCortex();

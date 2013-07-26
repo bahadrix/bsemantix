@@ -212,6 +212,7 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		branchGroup.addChild(ambientLight);
 		// background
 		branchGroup.addChild(createBackground());
+		//branchGroup.addChild(whiteBackground());
 		branchGroup.compile();
 
 		platform.setNominalViewingTransform();
@@ -340,6 +341,15 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		neuralRoot.removeChild(grids);
 	}
 
+	public BranchGroup whiteBackground() {
+		Background background = new Background(new Color3f(1f,1f,1f));
+		BoundingSphere sphere = new BoundingSphere(new Point3d(0,0,0), 100000);
+		background.setApplicationBounds(sphere);
+		BranchGroup branch = new BranchGroup();
+		branch.addChild(background);
+		return branch;
+	}
+	
 	public BranchGroup createBackground() {
 		// create a parent BranchGroup for the Background
 		BranchGroup backgroundGroup = new BranchGroup();

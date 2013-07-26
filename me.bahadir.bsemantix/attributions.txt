@@ -23,3 +23,7 @@ attributions:
 6.	icon: grid.png
 	http://www.iconfinder.com/icondetails/126570/24/grid_small_icon
 	Designer: Timothy Miller
+	
+7. 	icon: undo.png
+	http://www.iconfinder.com/icondetails/100953/24/arrow_back_left_undo_icon
+	Designer: Turbomilk - http://www.turbomilk.com

@@ -12,7 +12,7 @@ import me.bahadir.bsemantix.S;
 import org.eclipse.swt.SWT;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-public class Leaf extends GraphNode implements Serializable{
+public class Leaf extends DecisionNode implements Serializable{
 
 
 	private static final long serialVersionUID = -2649898462705767113L;

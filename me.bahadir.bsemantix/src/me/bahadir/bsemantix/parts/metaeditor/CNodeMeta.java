@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.ResourceManager;
 
-public class NodeMeta extends Composite {
+public class CNodeMeta extends Composite {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtNewText;
 	private Table table;
@@ -33,7 +33,7 @@ public class NodeMeta extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public NodeMeta(Composite parent, int style) {
+	public CNodeMeta(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		

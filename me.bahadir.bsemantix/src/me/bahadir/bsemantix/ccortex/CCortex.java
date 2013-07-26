@@ -5,6 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
+import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ngraph.NodeMeta;
+import me.bahadir.bsemantix.ngraph.SynapticEdge;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree;
 import me.bahadir.bsemantix.ngraph.dtree.DecisionTree.DecisionTreeData;
 
@@ -181,5 +184,18 @@ public class CCortex{
 		
 	}
 	
+	public DecisionTreeData load(SynapticEdge synapticEdge) {
+		return load(
+				synapticEdge.getSourceVertex().getOntClass().getURI(), 
+				synapticEdge.getProperty().getURI(), 
+				synapticEdge.getTargetVertex().getOntClass().getURI());
+	}
 	
+	public DecisionTreeData load(NodeMeta nm) {
+		if(!nm.isSynaptic()) return null;
+		
+		CCortex cortex = S.getStandartCCortex();
+		return load(nm.getSource().getURI(), nm.getPredicate().getURI(), nm.getRange().getURI());
+		
+	}
 }

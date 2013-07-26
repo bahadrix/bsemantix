@@ -43,6 +43,9 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.OWL2;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.custom.CTabItem;
 
 public class MetaCard extends FormDialog {
 	protected static Logger log = Logger.getLogger(MetaCard.class.getSimpleName());
@@ -54,6 +57,15 @@ public class MetaCard extends FormDialog {
 	private Text text_1;
 	private List<MetaField> metaFields;
 	private Text txtName;
+
+	private Composite cSingles;
+	private Composite cMultiples;
+	private CTabFolder tabFolder;
+	private CTabItem tbýtmNewItem;
+	private CTabItem tabItem;
+	private Button btnNewButton;
+	
+	private IManagedForm managedForm;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -67,6 +79,48 @@ public class MetaCard extends FormDialog {
 		this.metaFields = new LinkedList<>();
 		setHelpAvailable(false);
 	}
+
+	/**
+	 * Create contents of the form.
+	 * @param managedForm
+	 */
+	@Override
+	protected void createFormContent(IManagedForm managedForm) {
+		this.managedForm = managedForm;
+		FormToolkit toolkit = managedForm.getToolkit();
+		ScrolledForm form = managedForm.getForm();
+		form.setText(String.format("Create %s instance", ontClass.getLocalName()));
+		Composite body = form.getBody();
+		toolkit.decorateFormHeading(form.getForm());
+		toolkit.paintBordersFor(body);
+		managedForm.getForm().getBody().setLayout(new GridLayout(1, false));
+		
+		cSingles = managedForm.getToolkit().createComposite(managedForm.getForm().getBody(), SWT.NONE);
+		cSingles.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		managedForm.getToolkit().adapt(cSingles);
+		managedForm.getToolkit().paintBordersFor(cSingles);
+		cSingles.setLayout(new GridLayout(2, false));
+		
+		
+		cMultiples = new Composite(managedForm.getForm().getBody(), SWT.NONE);
+		cMultiples.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		managedForm.getToolkit().adapt(cMultiples);
+		managedForm.getToolkit().paintBordersFor(cMultiples);
+		cMultiples.setLayout(new GridLayout(1, false));
+		
+		tabFolder = new CTabFolder(cMultiples, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		managedForm.getToolkit().adapt(tabFolder);
+		managedForm.getToolkit().paintBordersFor(tabFolder);
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		
+
+		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
+		
+		loadOntClass(managedForm);
+
+	}
+
 
 	private void loadOntClass(IManagedForm managedForm) {
 	
@@ -141,65 +195,59 @@ public class MetaCard extends FormDialog {
 		addMetaPro(managedForm, nodeMeta, null);
 		
 	}
-	private void addMetaPro(IManagedForm managedForm, NodeMeta nodeMeta, String label) {
-		
-		Label lblNewLabel = new Label(managedForm.getForm().getBody(), SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		managedForm.getToolkit().adapt(lblNewLabel, true, true);
-		if(label == null) {
-			lblNewLabel.setText(S.getPropertyCaption(nodeMeta.getSource().getOntModel(), nodeMeta.getPredicate()));
-		} else {
-			lblNewLabel.setText(label);
-		}
 
+	private void addMetaPro(IManagedForm managedForm, NodeMeta nodeMeta, String label) {
+
+		
 		MetaField metaField = null;
-		
+
 		log.info(nodeMeta.getPredicateLabel());
-		
-		switch(nodeMeta.getPredicateType()) {
+
+		switch (nodeMeta.getPredicateType()) {
 		case DATA_TYPE:
+		
+			addSingleLabel(nodeMeta.getPredicateLabel());
 			
-			metaField = new CLiteralString(managedForm.getForm().getBody(), individual, nodeMeta);
+			metaField = new CLiteralString(cSingles, individual, nodeMeta);
 			
 			break;
 		case OBJECT_TYPE:
-			metaField = new CIndividualSelect(managedForm.getForm().getBody(), individual, nodeMeta);
-			lblNewLabel.setText(nodeMeta.getPredicateLabel() +" : " + nodeMeta.getRangeLabel());
+
+			if (!nodeMeta.isToOne()) { // * to many
+				CTabItem tab = new CTabItem(tabFolder, SWT.NONE);
+				tab.setText(nodeMeta.getPredicateLabel());
+				metaField = new CIndividualList(tabFolder, individual, nodeMeta);
+				tab.setControl(metaField);
+
+			} else {
+				
+				addSingleLabel(nodeMeta.getPredicateLabel());
+				if (nodeMeta.isSynaptic()) { // * to one
+					metaField = new CSynapticIndividual(cSingles, individual, nodeMeta);
+
+				} else {
+					metaField = new CIndividualSelect(cSingles, individual, nodeMeta);
+
+				}
+
+			}
 			break;
 		}
-		//if(restrict.getDataRange().equals(XSD.xstring)) {
-		if(metaField != null) {
+		// if(restrict.getDataRange().equals(XSD.xstring)) {
+		if (metaField != null) {
 			metaField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			managedForm.getToolkit().adapt(metaField, true, true);
 			metaFields.add(metaField);
 		}
 
-	}
-	
-	/**
-	 * Create contents of the form.
-	 * @param managedForm
-	 */
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		FormToolkit toolkit = managedForm.getToolkit();
-		ScrolledForm form = managedForm.getForm();
-		form.setText(String.format("Create %s instance", ontClass.getLocalName()));
-		Composite body = form.getBody();
-		toolkit.decorateFormHeading(form.getForm());
-		toolkit.paintBordersFor(body);
-		managedForm.getForm().getBody().setLayout(new GridLayout(2, false));
-		
-		
-
-		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
-		
-		loadOntClass(managedForm);
+		managedForm.getForm().getBody().layout(true, true);
 
 	}
 
-
-
-
-
+	private void addSingleLabel(String text) {
+		Label lblNewLabel = new Label(cSingles, SWT.NONE);
+		lblNewLabel.setText(text);
+		managedForm.getToolkit().adapt(lblNewLabel, true, true);
+		
+	}
 }

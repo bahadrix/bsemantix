@@ -36,7 +36,10 @@ public class Answer extends GraphConnection{
 		
 		public AnswerData() {};
 	
-		
+		/**
+		 * This one only used for decision dialog, not for hierarchy 
+		 */
+		private QuestionData sourceQuestionData;
 		
 		public AnswerData(String text, String fact) {
 			this(text,fact,new LinkedList<String>());
@@ -57,7 +60,7 @@ public class Answer extends GraphConnection{
 		}
 
 		public List<String> getSynonyms() {
-			System.out.println("synget");
+
 			return synonyms;
 		}
 
@@ -79,6 +82,10 @@ public class Answer extends GraphConnection{
 			System.out.println("synset");
 			this.synonyms = synonyms;
 		}
+
+		public QuestionData getSourceQuestionData() {
+			return sourceQuestionData;
+		}
 		
 		
 		
@@ -91,6 +98,9 @@ public class Answer extends GraphConnection{
 	public Answer(DecisionTree decisionTree, GraphNode source, GraphNode destination, AnswerData aData) {
 		super(decisionTree, ZestStyles.CONNECTIONS_DIRECTED, source, destination);
 		this.aData = aData;
+		if(source instanceof Question) {
+			aData.sourceQuestionData = ((Question) source).getQuestionData();
+		}
 		this.aData.answer = this;
 		this.destination = destination;
 		setText(aData.text);

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.ccortex.CCortex;
+import me.bahadir.bsemantix.semantic.SynapticProperty;
 
 import com.hp.hpl.jena.ontology.AllValuesFromRestriction;
 import com.hp.hpl.jena.ontology.OntClass;
@@ -49,6 +51,12 @@ public class NodeMeta implements Serializable {
 		
 	}
 	
+	
+	
+	public boolean isToOne() {
+		return maxCardinality == 1 || exactCardinality == 1;
+	}
+	
 	public static NodeMeta createFromOwlRestriction(OntClass ontClass, Restriction owlRestriction, boolean allowLiterals) {
 		NodeMeta nodeMeta = new NodeMeta(ontClass);		
 		if(!allowLiterals && nodeMeta.predicateType == PredicateType.DATA_TYPE) {
@@ -70,7 +78,14 @@ public class NodeMeta implements Serializable {
 
 	}
 	
+	public boolean isSynaptic() {
 
+		Property pIsSynap = source.getOntModel().getProperty("http://bahadir.me/synapse#isSynaptic");
+		
+	
+		
+		return getOntPredicate().hasProperty(pIsSynap);
+	}
 	
 	public String getRangeLabel() {
 		OntResource ores = source.getOntModel().getOntResource(range);
