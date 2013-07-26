@@ -170,6 +170,24 @@ public class BenchPart extends PartBase {
 
 			}
 		});
+		
+		final ToolItem tbRefresh = new ToolItem(bar, SWT.PUSH);
+		tbRefresh.setText("Refresh");
+		tbRefresh.setSelection(false);
+		tbRefresh.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				loadOnto(nb.getOntModel());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
 		bar.pack();
 
 		Composite awtConatiner = new Composite(parent, SWT.EMBEDDED);
@@ -218,7 +236,8 @@ public class BenchPart extends PartBase {
 				model.read(sr, null);
 				log.info("Loading ontology..");
 				// TODO Dafuq is that ns??
-				nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
+				//nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
+				nb.loadOntology(model);
 				log.info("Completed!");
 
 				Console.midText("");
@@ -230,4 +249,27 @@ public class BenchPart extends PartBase {
 
 	}
 
+	
+	public void loadOnto(final OntModel model) {
+		S.runJob(new Job("visualizing synaptic ontology") {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+
+				monitor.beginTask(String.format("Parsing process started..", 100), 100);
+
+				Console.midText("Please wait..");
+				log.info("Loading ontology model..");
+				// TODO Dafuq is that ns??
+				//nb.loadOntology(model, "http://bahadir.me/organiclegislation/");
+				nb.loadOntology(model);
+				log.info("Completed!");
+
+				Console.midText("");
+				monitor.done();
+				return Status.OK_STATUS;
+
+			}
+		});
+	}
 }

@@ -61,7 +61,7 @@ public class MetaCard extends FormDialog {
 	private Composite cSingles;
 	private Composite cMultiples;
 	private CTabFolder tabFolder;
-	private CTabItem tbýtmNewItem;
+	private CTabItem tabNewItem;
 	private CTabItem tabItem;
 	private Button btnNewButton;
 	
@@ -99,9 +99,22 @@ public class MetaCard extends FormDialog {
 		cSingles.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		managedForm.getToolkit().adapt(cSingles);
 		managedForm.getToolkit().paintBordersFor(cSingles);
-		cSingles.setLayout(new GridLayout(2, false));
+		GridLayout gl_cSingles = new GridLayout(2, false);
+		gl_cSingles.verticalSpacing = 0;
+		cSingles.setLayout(gl_cSingles);
 		
 		
+		
+		
+		
+
+		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
+		
+		loadOntClass(managedForm);
+
+	}
+
+	private void addCMultiples() {
 		cMultiples = new Composite(managedForm.getForm().getBody(), SWT.NONE);
 		cMultiples.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		managedForm.getToolkit().adapt(cMultiples);
@@ -114,14 +127,9 @@ public class MetaCard extends FormDialog {
 		managedForm.getToolkit().paintBordersFor(tabFolder);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		
-
-		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
 		
-		loadOntClass(managedForm);
-
 	}
-
-
+	
 	private void loadOntClass(IManagedForm managedForm) {
 	
 		dataProperties = new LinkedList<>();
@@ -148,6 +156,8 @@ public class MetaCard extends FormDialog {
 		for(MetaField mf : metaFields) {
 			mf.load();
 		}
+		
+		
 	}
 	
 	
@@ -214,10 +224,14 @@ public class MetaCard extends FormDialog {
 		case OBJECT_TYPE:
 
 			if (!nodeMeta.isToOne()) { // * to many
+				if(cMultiples == null) {
+					addCMultiples();
+				}
 				CTabItem tab = new CTabItem(tabFolder, SWT.NONE);
 				tab.setText(nodeMeta.getPredicateLabel());
 				metaField = new CIndividualList(tabFolder, individual, nodeMeta);
 				tab.setControl(metaField);
+			
 
 			} else {
 				

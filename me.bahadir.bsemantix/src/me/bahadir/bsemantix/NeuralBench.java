@@ -101,6 +101,8 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 	private Canvas3D canvas3D;
 
 	private OntoAdapter ontoAdapter;
+
+	private OntModel ontModel;
 	
 	public NeuralBench(Frame frame) {
 		this.console = new Console(NeuralBench.class);
@@ -249,9 +251,9 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		return ontoAdapter;
 	}
 
-	public void loadOntology(OntModel model, String nsPrefix) {
+	public void loadOntology(OntModel model) {
 		clearArea();
-		
+		this.ontModel = model;
 		ontoAdapter = new OntoAdapter(model);
 		
 		ng = ontoAdapter.createNeuralGraph();
@@ -266,6 +268,12 @@ public class NeuralBench implements MouseListener, MouseMotionListener {
 		});
 
 		ng.render(neuralRoot);
+	}
+
+	
+	
+	public OntModel getOntModel() {
+		return ontModel;
 	}
 
 	public void clearArea() {
