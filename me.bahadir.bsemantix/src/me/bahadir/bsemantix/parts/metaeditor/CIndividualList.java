@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import me.bahadir.bsemantix.S;
 import me.bahadir.bsemantix.ngraph.NodeMeta;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -32,10 +31,6 @@ import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.layout.RowData;
 
 public class CIndividualList extends MetaField {
 	
@@ -99,9 +94,21 @@ public class CIndividualList extends MetaField {
 			}
 		});
 		tbAdd.setToolTipText("Add Item");
+		
 		tbAdd.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/sweet/badge-square-plus-24-ns.png"));
 		
 		ToolItem tbEdit = new ToolItem(toolBar, SWT.NONE);
+		tbEdit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(table.getSelectionIndex() > -1) {
+					Resource res = (Resource)table.getItem(table.getSelectionIndex()).getData();
+					
+					editIndividual(res.as(Individual.class));
+				}
+				
+			}
+		});
 		tbEdit.setToolTipText("Edit Item");
 		tbEdit.setImage(ResourceManager.getPluginImage("me.bahadir.bsemantix", "icons/sweet/page-pencil-24-ns.png"));
 		
@@ -134,20 +141,23 @@ public class CIndividualList extends MetaField {
 
 	}
 
-	
-
-	protected void addIndividual() {
-		OntClass targetClass = nodeMeta.getRange().as(OntClass.class);
+	protected void editIndividual(Individual subInd) {
+	OntClass targetClass = nodeMeta.getRange().as(OntClass.class);
 		
-		MetaCard mc = new MetaCard(getShell(), targetClass, null);
+		MetaCard mc = new MetaCard(getShell(), targetClass, subInd);
 		mc.create();
 		
 		if(mc.open() == MetaCard.OK) {
-		
+			
 			individual.addProperty(nodeMeta.getPredicate(), mc.getIndividual());
 			load();
 		}
-		
+	}
+	
+
+	protected void addIndividual() {
+	
+		editIndividual(null);
 		
 	}
 
@@ -177,7 +187,7 @@ public class CIndividualList extends MetaField {
 			TableItem ti = new TableItem(table, SWT.None);
 			ti.setImage(greenBullet);
 			ti.setText(new String[]{
-					st.getResource().getLocalName(),
+					S.getResourceLabel(st.getResource()),
 					st.getResource().getURI()
 			});
 			ti.setData(st.getResource());

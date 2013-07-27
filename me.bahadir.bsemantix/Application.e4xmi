@@ -48,6 +48,7 @@
         <children xsi:type="menu:HandledToolItem" xmi:id="_AtbQ8dToEeKb2Mvea7mUsQ" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sample.gif" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_AtbQ8tToEeKb2Mvea7mUsQ" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/save_edit.gif" command="_AtaC2tToEeKb2Mvea7mUsQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_5XCf8NTsEeKb2Mvea7mUsQ" elementId="" label="Gostert" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sweet/asset-tan-16-ns.png" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_ZaNHoPaxEeKLfbjbEdCooQ" elementId="me.bahadir.bsemantix.handledtoolitem.connectTDB" iconURI="platform:/plugin/me.bahadir.bsemantix/icons/sweet/dice-white-16-ns.png" command="_nhBRUPaxEeKLfbjbEdCooQ"/>
       </children>
     </trimBars>
     <trimBars xmi:id="_meNGgNZREeK9m64Hf6YKdw" elementId="me.bahadir.bsemantix.trimbar.status" side="Bottom">
@@ -63,6 +64,7 @@
   <handlers xmi:id="_Atap4NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.aboutCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.AboutHandler" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_WYNlkNTsEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ShowHandler" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_1sy_cPSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.handler.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ClearConsole" command="_w5aI8PSAEeKD0darlIBcKQ"/>
+  <handlers xmi:id="_sErCsPaxEeKLfbjbEdCooQ" elementId="me.bahadir.bsemantix.handler.connectTDB" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.connectTDB" command="_nhBRUPaxEeKLfbjbEdCooQ"/>
   <bindingTables xmi:id="_AtaC1dToEeKb2Mvea7mUsQ" bindingContext="_AtaC0NToEeKb2Mvea7mUsQ">
     <bindings xmi:id="_AtaC1tToEeKb2Mvea7mUsQ" keySequence="M1+Q" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
     <bindings xmi:id="_AtaC2dToEeKb2Mvea7mUsQ" keySequence="M1+O" command="_AtaC19ToEeKb2Mvea7mUsQ"/>
@@ -80,6 +82,7 @@
   <commands xmi:id="_AtaC3dToEeKb2Mvea7mUsQ" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
   <commands xmi:id="_v4cUANTrEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.showname" commandName="showCommand"/>
   <commands xmi:id="_w5aI8PSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.command.clearConsole" commandName="clearConsole"/>
+  <commands xmi:id="_nhBRUPaxEeKLfbjbEdCooQ" elementId="me.bahadir.bsemantix.command.connectTDB" commandName="connectTDBCommand"/>
   <addons xmi:id="_AtZbwtToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_AtZbw9ToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_AtZbxNToEeKb2Mvea7mUsQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

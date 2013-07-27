@@ -102,11 +102,7 @@ public class MetaCard extends FormDialog {
 		GridLayout gl_cSingles = new GridLayout(2, false);
 		gl_cSingles.verticalSpacing = 0;
 		cSingles.setLayout(gl_cSingles);
-		
-		
-		
-		
-		
+
 
 		addMetaPro(managedForm, NodeMeta.createFromProperty(ontClass, DC.title, XSD.xstring, true), "Title");
 		

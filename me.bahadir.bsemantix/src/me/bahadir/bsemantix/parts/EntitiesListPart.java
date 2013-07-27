@@ -91,12 +91,13 @@ public class EntitiesListPart extends ViewPart{
 					while(inds.hasNext()) {
 						ind = inds.next().asIndividual();
 					}
-					
-					MetaCard mc = new MetaCard(parent.getShell(), sn.getOntClass(), ind);
-					mc.create();
-					mc.getShell().setSize(500, 600);
-					mc.open();
-					sn.getOntClass().getOntModel().write(System.out);
+					sn.getOntClass().getOntModel().begin();
+						MetaCard mc = new MetaCard(parent.getShell(), sn.getOntClass(), ind);
+						mc.create();
+						mc.getShell().setSize(500, 600);
+						mc.open();
+						sn.getOntClass().getOntModel().write(System.out);
+					sn.getOntClass().getOntModel().commit();
 				}
 			}
 		});

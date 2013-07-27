@@ -56,6 +56,7 @@ import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DC;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Global Static methods
@@ -109,6 +110,19 @@ public class S {
 			return ind.getLocalName();
 		} else {
 			return "<individual>";
+		}
+	}
+	
+	
+	
+	public static String getResourceLabel(Resource res) {
+		if(res.hasProperty(DC.title)) {
+			
+			return res.getProperty(DC.title).getObject().asLiteral().getString();
+		} else if(res.hasProperty(RDFS.label)) {
+			return res.getProperty(RDFS.label).getObject().asLiteral().getString();
+		} else {
+			return res.getLocalName();
 		}
 	}
 	

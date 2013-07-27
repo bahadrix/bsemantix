@@ -1,7 +1,10 @@
 package me.bahadir.bsemantix;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 
@@ -12,7 +15,9 @@ import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 public class LifeCycleManager {
 
 	@PostContextCreate
-	void postContextCreate(final IEventBroker eventBroker) {
+	void postContextCreate(final IEventBroker eventBroker, final IWorkspace workspace) {
+		
+		System.out.println(workspace.getRoot().toString());
 
 		S.broker = eventBroker;
 
