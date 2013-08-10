@@ -64,7 +64,7 @@
   <handlers xmi:id="_Atap4NToEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.aboutCommand" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.AboutHandler" command="_AtaC3dToEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_WYNlkNTsEeKb2Mvea7mUsQ" elementId="me.bahadir.bsemantix.handler.0" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ShowHandler" command="_v4cUANTrEeKb2Mvea7mUsQ"/>
   <handlers xmi:id="_1sy_cPSAEeKD0darlIBcKQ" elementId="me.bahadir.bsemantix.handler.1" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ClearConsole" command="_w5aI8PSAEeKD0darlIBcKQ"/>
-  <handlers xmi:id="_sErCsPaxEeKLfbjbEdCooQ" elementId="me.bahadir.bsemantix.handler.connectTDB" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.connectTDB" command="_nhBRUPaxEeKLfbjbEdCooQ"/>
+  <handlers xmi:id="_sErCsPaxEeKLfbjbEdCooQ" elementId="me.bahadir.bsemantix.handler.connectTDB" contributionURI="bundleclass://me.bahadir.bsemantix/me.bahadir.bsemantix.handlers.ConnectTDB" command="_nhBRUPaxEeKLfbjbEdCooQ"/>
   <bindingTables xmi:id="_AtaC1dToEeKb2Mvea7mUsQ" bindingContext="_AtaC0NToEeKb2Mvea7mUsQ">
     <bindings xmi:id="_AtaC1tToEeKb2Mvea7mUsQ" keySequence="M1+Q" command="_AtaC09ToEeKb2Mvea7mUsQ"/>
     <bindings xmi:id="_AtaC2dToEeKb2Mvea7mUsQ" keySequence="M1+O" command="_AtaC19ToEeKb2Mvea7mUsQ"/>

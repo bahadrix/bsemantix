@@ -8,10 +8,12 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.sound.sampled.DataLine;
 
 import me.bahadir.bsemantix.Console;
 import me.bahadir.bsemantix.NeuralBench;
 import me.bahadir.bsemantix.S;
+import me.bahadir.bsemantix.handlers.ConnectTDB;
 import me.bahadir.bsemantix.physics.Physics;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,6 +40,9 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IPartService;
 
 import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntModelSpec;
+import com.hp.hpl.jena.ontology.impl.OWLDLProfile;
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class BenchPart extends PartBase {
@@ -201,6 +206,12 @@ public class BenchPart extends PartBase {
 
 	}
 
+	@Inject @Optional
+	void out(@UIEventTopic(ConnectTDB.TOPIC_CONNECTED) Dataset dataset) {
+		loadOnto(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, dataset.getDefaultModel()));
+		
+	}
+	
 	@AboutToShow
 	public void onShow() {
 

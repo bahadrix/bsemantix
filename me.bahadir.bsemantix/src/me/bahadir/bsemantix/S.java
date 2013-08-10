@@ -53,6 +53,7 @@ import org.w3c.dom.NodeList;
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntProperty;
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DC;
@@ -66,7 +67,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class S {
 
-	
+	public static final String NS_BSX = "http://bahadir.me/bsemantix#";
 	
 	public static Vector3d unitVectorX = new Vector3d(1, 0, 0);
 	public static Vector3d unitVectorY = new Vector3d(0, 1, 0);
@@ -80,6 +81,7 @@ public class S {
 
 	public static IEventBroker broker;
 	public static MApplication application;
+	public static Dataset currentDataSet;
 
 	
 	public static String getPropertyCaption(OntModel om, Property p) {
